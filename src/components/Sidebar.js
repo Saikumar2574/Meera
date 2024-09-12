@@ -16,9 +16,11 @@ import {
   getWhishlistDetails,
 } from "./service/getData";
 import Whishlist from "./Whishlist";
-import { FaCog } from "react-icons/fa";
+import { FaCog, FaPlus } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
+import { IoStorefrontOutline } from "react-icons/io5";
 
-const Sidebar = ({ component, setComponent, setIsSearch }) => {
+const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
   const [openCart, setOpenCart] = useState(false);
   const [cartDetails, setCartDetails] = useState(null);
   const [openWishList, setOpenWishList] = useState(false);
@@ -56,20 +58,60 @@ const Sidebar = ({ component, setComponent, setIsSearch }) => {
   }, [language]);
 
   return (
-    <div className="fixed p-4 flex justify-center items-center h-[80%] flex-col gap-y-10">
+    <div className="fixed p-4 flex justify-center items-center h-[80%] flex-col gap-y-8 lg:gap-y-10">
       <div>
+        <Tooltip content={<>New&nbsp;Conversation</>} placement="right">
+          <button
+            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
+            onClick={() => {
+              setComponent(null);
+              setIsSearch(false);
+            }}
+          >
+            <FaPlus
+              size={22}
+              className={`${
+                component === null
+                  ? "text-black"
+                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+              } `}
+            />
+          </button>
+        </Tooltip>
+      </div>
+      
+      {/* <div>
         <Tooltip content="Menu" placement="right">
           <button
             className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
             onClick={() => {
-              setComponent("");
+              setComponent(null);
               setIsSearch(false);
             }}
           >
             <HiViewGrid
               size={22}
               className={`${
-                component === ""
+                component === null
+                  ? "text-black"
+                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+              } `}
+            />
+          </button>
+        </Tooltip>
+      </div> */}
+      <div>
+        <Tooltip content={<>Browse&nbsp;the&nbsp;store</>} placement="right">
+          <button
+            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
+            onClick={() => {
+              setComponent("reviewStore")
+            }}
+          >
+            <IoStorefrontOutline
+              size={22}
+              className={`${
+                component === "reviewStore"
                   ? "text-black"
                   : "text-gray-400 group-hover:text-[#b6b5d4]"
               } `}
@@ -124,7 +166,7 @@ const Sidebar = ({ component, setComponent, setIsSearch }) => {
           </button>
         </Tooltip>
       </div>
-      <div>
+      {/* <div>
         <Tooltip content="Language" placement="right">
           <button
             className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md  transition-colors group"
@@ -140,8 +182,8 @@ const Sidebar = ({ component, setComponent, setIsSearch }) => {
             />
           </button>
         </Tooltip>
-      </div>
-      <Modal
+      </div> */}
+      {/* <Modal
         show={openModal}
         size="md"
         onClose={() => setOpenModal(false)}
@@ -169,7 +211,7 @@ const Sidebar = ({ component, setComponent, setIsSearch }) => {
             </Select>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
       {/* {openCart && ( */}
       <Cart
         isOpen={openCart}
@@ -183,7 +225,6 @@ const Sidebar = ({ component, setComponent, setIsSearch }) => {
         data={wishtList}
         getWishList={getWishList}
       />
-
       {/* )} */}
     </div>
   );

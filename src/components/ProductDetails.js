@@ -143,7 +143,7 @@ function ProductDetails({ open, close, data }) {
         }}
       />
       <Modal.Body>
-        <section className=" h-full flex justify-center items-center p-0 md:p-5">
+        <section className=" h-full flex justify-center items-center p-0 md:p-5 pb-20">
           <div class="mx-auto max-w-7xl h-full">
             <div className="relative">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-10 xl:gap-x-20">

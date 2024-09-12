@@ -12,7 +12,7 @@ import ProductDetails from "./ProductDetails";
 import { addCart, addWishlistItem, getProductDetails } from "./service/getData";
 import { IoIosGitCompare, IoMdCart } from "react-icons/io";
 import { FaPlusCircle, FaStar } from "react-icons/fa";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { MdFavorite, MdFavoriteBorder, MdPushPin } from "react-icons/md";
 import { IoBag } from "react-icons/io5";
 import { Drawer, Toast, Tooltip } from "flowbite-react";
 import { InView } from "./ui/in-view";
@@ -37,6 +37,7 @@ export default function ProductList({
   const [isActive, setIsActive] = useState(false);
   const [showWishlistModal, setShowWishlistModal] = useState(false);
   const [productId, setProductId] = useState(null);
+  const [productView, setProductView] = useState(null);
 
   useEffect(() => {
     // Function to check window size
@@ -118,22 +119,6 @@ export default function ProductList({
 
   return (
     <>
-      {/* <InView
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: 100,
-            filter: "blur(4px)",
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-          },
-        }}
-        viewOptions={{ margin: "0px 0px -200px 0px" }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      > */}
       {toast.show && (
         <div className="fixed bottom-4 right-2 transform z-50">
           <div className="relative w-full">
@@ -167,28 +152,11 @@ export default function ProductList({
       <div className="w-full flex items-center justify-center p-6">
         <div className="w-full h-full flex flex-col relative ml-0">
           <section className="h-full">
-            {/* <div className="flex items-center justify-between mb-3"> */}
-            {/* <h3 className="text-sm md:text-lg font-semibold">
-                  {products.message}
-                </h3> */}
-            {/* <div className="flex items-center justify-between "> */}
-            {/* <div className="hidden md:block ">
-                <button
-                  onClick={() => setOpenConsideration(true)}
-                  className="inline-flex items-center justify-center bg-gray-300 rounded-full p-2 font-semibold"
-                >
-                  <FaPlusCircle className={`md:w-6 md:h-6 mr-2`} />
-                  Considerations
-                </button>
-              </div> */}
             {selectedItems.length > 0 && (
               <span className="text-md text-gray-600 font-semibold ml-2 my-6">
                 {selectedItems.length} Selected
               </span>
             )}
-            {/* </div> */}
-            {/* </div> */}
-
             {products?.length > 0 && (
               <div className="relative">
                 <Carousel opts={{ align: "start" }} className="w-full">
@@ -196,13 +164,13 @@ export default function ProductList({
                     {products?.map((card, index) => (
                       <CarouselItem
                         key={index}
-                        className={`basis-[50%] ${
+                        className={`basis-[50%] relative group ${
                           cardStyle === 1
                             ? "basis-1/2"
                             : cardStyle === 2
                             ? "basis-[75%]"
                             : "basis-[80%]"
-                        }  md:basis-[45%] lg:basis-[28%] pt-2 relative ${
+                        }  md:basis-[45%] lg:basis-[25%] pt-2 relative  ${
                           selectedItems.some(
                             (selectedCard) =>
                               selectedCard.productId === card?.productId
@@ -212,18 +180,18 @@ export default function ProductList({
                         }`}
                       >
                         <div
-                          onClick={() => handleCardClick(card)}
-                          className={`flex flex-col overflow-hidden bg-white  rounded-md  ${
+                          onClick={() => setProductView(card)}
+                          className={`flex flex-col overflow-hidden bg-white  rounded-md mt-10  transition-all duration-700 hover:scale-105 hover:shadow-2xl ${
                             selectedItems.some(
                               (selectedCard) =>
                                 selectedCard.productId === card?.productId
                             )
-                              ? " border-2 border-blue-500"
+                              ? " border-2 border-black"
                               : "border border-gray-200"
                           }`}
-                          style={{
-                            boxShadow: "1px 1px 10px 2px rgba(0, 0, 0, 0.1)",
-                          }}
+                          // style={{
+                          //   boxShadow: "1px 1px 10px 2px rgba(0, 0, 0, 0.1)",
+                          // }}
                         >
                           <div className="relative flex-shrink-0 aspect-w-3 aspect-h-2 p-3 md:p-5 group ">
                             <div className="block md:hidden">
@@ -236,10 +204,22 @@ export default function ProductList({
                               >
                                 <button
                                   type="button"
-                                  onClick={(e) => e.stopPropagation()}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCardClick(card);
+                                  }}
                                   className="inline-flex items-center justify-center"
                                 >
-                                  <FaPlusCircle
+                                  <MdPushPin
+                                    style={{
+                                      color: selectedItems.some(
+                                        (selectedCard) =>
+                                          selectedCard.productId ===
+                                          card?.productId
+                                      )
+                                        ? "blue"
+                                        : "gray", // Change color based on state
+                                    }}
                                     className={`md:w-6 md:h-6  ${
                                       cardStyle === 3
                                         ? "w-6 h-6"
@@ -289,10 +269,24 @@ export default function ProductList({
                               <div className="flex items-center mb-2">
                                 <button
                                   type="button"
-                                  onClick={(e) => e.stopPropagation()}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCardClick(card);
+                                  }}
                                   className="inline-flex items-center justify-center"
                                 >
-                                  <FaPlusCircle className="md:w-5 md:h-5 sm:w-4 sm:h-4" />
+                                  <MdPushPin
+                                    className="md:w-5 md:h-5 sm:w-4 sm:h-4"
+                                    style={{
+                                      color: selectedItems.some(
+                                        (selectedCard) =>
+                                          selectedCard.productId ===
+                                          card?.productId
+                                      )
+                                        ? "black"
+                                        : "gray", // Change color based on state
+                                    }}
+                                  />
                                 </button>
                                 <span className="ml-4 font-bold text-[16px]">
                                   A2B7
@@ -307,6 +301,9 @@ export default function ProductList({
                                     Top Pick
                                   </span>
                                 )}
+                                <p className="ml-auto hidden text-sm font-semibold text-gray-500 italic group-hover:block">
+                                  Price : &#8377;{card?.price}
+                                </p>
                               </div>
                             </div>
 
@@ -510,8 +507,8 @@ export default function ProductList({
                                 </div>
                               </div>
                             </div>
-                            <div className="hidden md:block absolute inset-x-0 bottom-0 transition-all duration-200 translate-y-full group-hover:translate-y-0 bg-[#200047] p-2">
-                              <div className=" flex items-center justify-between mt-2">
+                            <div className="hidden md:block absolute inset-x-0 bottom-0 transition-all duration-200 translate-y-full group-hover:translate-y-0 bg-black px-2 py-3">
+                              <div className=" flex items-center justify-between">
                                 <button
                                   type="button"
                                   // onClick={(e) => e.stopPropagation()}
@@ -556,12 +553,22 @@ export default function ProductList({
                             </div>
                           </div>
                         </div>
-                        {selectedItems.some(
+
+                        <div className="absolute top-0 left-20 hidden group-hover:flex bg-gray-800 text-white text-sm rounded-md py-2 px-4 z-50 shadow-lg">
+                          {/* Chat-style corner */}
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-t-gray-800 border-l-transparent border-r-transparent"></div>
+                          {/* Tooltip content */}
+                          <div className="flex items-center justify-center gap-4">
+                            <p className="text-xl italic font-bold">70%</p>
+                            <p className="text-base font-bold">Store Match</p>
+                          </div>
+                        </div>
+                        {/* {selectedItems.some(
                           (selectedCard) =>
                             selectedCard.productId === card?.productId
                         ) && (
                           <HiCheckBadge className="absolute top-1 z-50 md:top-0 left-3 text-blue-500 md:w-6 md:h-6 lg:w-6 lg:h-6 sm:w-4 sm:h-4 " />
-                        )}
+                        )} */}
                       </CarouselItem>
                     ))}
                   </CarouselContent>
@@ -643,6 +650,60 @@ export default function ProductList({
           `}</style>
         </div>
       </div>
+      <Drawer
+        open={productView !== null}
+        onClose={() => setProductView(null)}
+        position="left"
+        className="w-full md:w-[380px] p-14 pb-20  bg-gray-200 hidden md:block"
+      >
+        <Drawer.Items>
+          <div className="p-3">
+            <h4 className="text-2xl italic font-bold text-center mb-4">
+              Dynamic Inference
+            </h4>
+            <div
+              className="flex flex-col items-center justify-center p-4 bg-white rounded-xl"
+              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+            >
+              <p className="text-5xl italic font-bold mb-3">70%</p>
+              <p className="text-xl  font-bold">Store Match</p>
+            </div>
+          </div>
+          <div className="mt-6">
+            <h4 className="text-lg italic font-bold text-center mb-2">
+              Fulfilment
+            </h4>
+            <div
+              className="flex flex-col px-10 py-4 bg-black text-white rounded-xl"
+              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+            >
+              <ul className="space-y-2">
+                {["Colour", "Size", "Texture", "Shipping", "In Stock"].map(
+                  (item, idx) => (
+                    <li key={idx} className="flex items-center space-x-2">
+                      <span className="w-3 h-3 rounded-full bg-gray-500" />{" "}
+                      {/* Circle */}
+                      <span>{item}</span> {/* Item text */}
+                    </li>
+                  )
+                )}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h4 className="text-lg italic font-bold text-center mb-2">
+              Actions
+            </h4>
+            <button className="w-full bg-black text-white mb-2 px-6 py-3 rounded-xl">
+              Shortlist This Item
+            </button>
+            <button className="w-full bg-black text-white px-6 py-3 rounded-xl">
+              Move to Cart
+            </button>
+          </div>
+        </Drawer.Items>
+      </Drawer>
       {openConsideration && (
         <Drawer
           open={openConsideration}

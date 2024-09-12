@@ -1,13 +1,12 @@
 import React from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import GaugeChart from "react-gauge-chart";
+import { motion } from "framer-motion";
 
 function Understanding({ data, selectedPhrase, getProductList, phrasesRef }) {
   return (
     <div className="flex flex-col relative mt-8">
-      <h2
-        className="mt-30 ml-0 md:ml-6 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6  md:leading-[55px]"
-      >
+      <h2 className="mt-30 ml-0 md:ml-6 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6  md:leading-[55px]">
         Hey there,
         <br />
         this is what i could process ...
@@ -38,7 +37,10 @@ function Understanding({ data, selectedPhrase, getProductList, phrasesRef }) {
             // nrOfLevels={420}
             // arcsLength={[0.3, 0.5, 0.2]}
             colors={["#EA4228", "#F5CD19", "#5BE12C"]}
-            percent={data?.relevance_score===10 ? 1 :Number(`0.${data?.relevance_score}`)
+            percent={
+              data?.relevance_score === 10
+                ? 1
+                : Number(`0.${data?.relevance_score}`)
             }
             arcPadding={0.02}
             hideText
@@ -79,13 +81,17 @@ function Understanding({ data, selectedPhrase, getProductList, phrasesRef }) {
             </div>
           ))} */}
 
-          {data?.search_phrase?.map((item, index) => (
-            <div
-              key={index}
-              onClick={() => getProductList(item?.phrase)}
-              className={`col-span-12 md:col-span-3 bg-[#04102f] bg-[radial-gradient(#ffffff33_1px,#04102f_1px)] bg-[size:20px_20px] relative 
-      p-8 rounded-lg flex flex-col h-72 cursor-pointer transition-transform transform border  hover:scale-105 mt-10`}
-            >
+          {data?.possible_cart_items?.map((item, index) => (
+             <motion.div
+             key={index}
+             onClick={() => getProductList(item?.item)}
+             className="col-span-12 md:col-span-3 bg-[#04102f] bg-[radial-gradient(#ffffff33_1px,#04102f_1px)] bg-[size:20px_20px] relative 
+             p-8 rounded-lg flex flex-col h-72 cursor-pointer transition-transform transform border  hover:scale-105 mt-10"
+             layoutId={`card-${index}`}
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             exit={{ opacity: 0, scale: 0.9 }}
+           >
               {/* Optional dynamic class based on selectedPhrase */}
               {/* ${selectedPhrase === item?.phrase ? "bg-black text-white" : "bg-gray-300 hover:bg-gray-400 text-black"} */}
 
@@ -97,22 +103,22 @@ function Understanding({ data, selectedPhrase, getProductList, phrasesRef }) {
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
-                  minHeight: "3rem", 
+                  minHeight: "3rem",
                   lineHeight: "1.5rem",
                 }}
               >
                 {item?.item}
               </p>
-              <p className="text-lg text-[#c7c7c7] italic mt-5">
+              {/* <p className="text-lg text-[#c7c7c7] italic mt-5">
                 {item?.phrase}
-              </p>
+              </p> */}
               <p className="absolute bottom-5 text-sm font-semibold text-[#9c9c9c] italic">
                 Quantity :{" "}
                 {data?.possible_cart_items_with_quantity?.find(
                   (cart) => cart.item === item?.item
                 )?.quantity || "N/A"}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
         <a

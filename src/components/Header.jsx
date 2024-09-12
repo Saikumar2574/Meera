@@ -15,8 +15,9 @@ import { getCartDetails, getWhishlistDetails } from "./service/getData";
 import Cart from "./Cart";
 import Whishlist from "./Whishlist";
 import Search from "./Search";
+import { ModeToggle } from "./ScreenMode";
 
-export function Header({ reset,setOpenModal }) {
+export function Header({ reset, setOpenModal }) {
   const [showAuth, setShowAuth] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -43,7 +44,7 @@ export function Header({ reset,setOpenModal }) {
       setOpenWishList(true);
     }
   };
-  
+
   useEffect(() => {
     // Check if token exists in session storage
     const token = localStorage.getItem("token");
@@ -58,6 +59,7 @@ export function Header({ reset,setOpenModal }) {
 
   return (
     <>
+    
       <div className="flex h-12 w-full shrink-0 justify-between items-center md:px-6">
         <img src="/logo144.png" className="w-10 h-10 inline md:hidden" />
         <Link
@@ -71,11 +73,12 @@ export function Header({ reset,setOpenModal }) {
             className="w-28 md:w-40"
           />
         </Link>
-        <div className="hidden md:block">
+        <div className="hidden md:block ">
+          {/* <ModeToggle/> */}
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className=" bg-gray-400 md:bg-white border-black border-[1.5px] flex text-black hover:text-white hover:bg-black font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
+              className=" bg-gray-400 md:bg-white dark:md:bg-black border-black dark:border-white border-[1.5px] flex text-black dark:text-white dark:hover:text-black dark:hover:bg-white hover:text-white hover:bg-black font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
             >
               <MdLogout size={26} />
               <span className="hidden md:inline ml-3">Logout</span>
@@ -83,7 +86,8 @@ export function Header({ reset,setOpenModal }) {
           ) : (
             <button
               onClick={() => setShowAuth(true)}
-              className="bg-gray-400 md:bg-white border-black border-[1.5px] flex text-black hover:text-white hover:bg-black font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
+              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+              className="bg-gray-400 md:bg-white flex text-black hover:text-white hover:bg-black font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
             >
               <MdPerson size={26} />
               <span className="hidden md:inline ml-3">Login</span>
@@ -92,7 +96,7 @@ export function Header({ reset,setOpenModal }) {
         </div>
         <button
           onClick={() => setMobileMenu(true)}
-          className=" block md:hidden  md:bg-white text-black hover:bg-gray-300 font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
+          className=" block md:hidden  md:bg-white dark:md:bg-black text-black hover:bg-gray-300 font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
         >
           <HiViewGrid size={26} />
         </button>
@@ -149,7 +153,7 @@ export function Header({ reset,setOpenModal }) {
                     <Sidebar.Item
                       onClick={() => {
                         setMobileMenu(false);
-                        setOpenModal(true)
+                        setOpenModal(true);
                       }}
                       icon={FaCog}
                     >

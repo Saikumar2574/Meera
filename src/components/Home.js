@@ -8,12 +8,17 @@ import {
 import { InView } from "@/components/ui/in-view";
 import { PlaceholdersAndVanishTextarea } from "@/components/ui/placeholders-and-vanish-input";
 import { Drawer, Label, Modal, Select, Spinner, Toast } from "flowbite-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { HiX } from "react-icons/hi";
-import { IoMdSend } from "react-icons/io";
-import { IoBag } from "react-icons/io5";
+import { HiOutlineArrowNarrowRight, HiX } from "react-icons/hi";
+import { IoIosSearch, IoMdSend } from "react-icons/io";
+import { IoBag, IoStorefrontOutline } from "react-icons/io5";
 import { ImMic } from "react-icons/im";
 import MarkdownRenderer from "@/components/Markdown";
 import Image from "next/image";
@@ -24,10 +29,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { FaStopCircle } from "react-icons/fa";
+import { FaCross, FaSearch, FaStopCircle } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import Understanding from "@/components/Understanding";
-
+import { CiShoppingTag } from "react-icons/ci";
+import { RiShoppingBasketLine } from "react-icons/ri";
+import StoreOverview from "./StoreOverview";
+import ExploreStore from "./ExploreStore";
+import { MdCancel } from "react-icons/md";
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 const Categories = dynamic(() => import("@/components/Categories"), {
   ssr: false,
 });
@@ -64,13 +74,19 @@ export default function HomePage() {
   const [data, setData] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const placeholders = [
-    "What's the first rule of Fight Club?",
-    "Who is Tyler Durden?",
-    "Where is Andrew Laeddis Hiding?",
-    "Write a JavaScript method to reverse a string",
-    "How to assemble your own PC?",
+  const scale = useMotionValue(1);
+  const transformScale = useTransform(scale, [0, 1], [0.8, 1.2]);
+  const placeholders1 = [
+    "Show me riding jackets, pants and gloves",
+    "show me maintenance products for my bike",
+    "i am looking for a Portable Air Pump",
   ];
+  const placeholders2 = [
+    "i want waterproof saddlebags for my motorcycle that are easy to detach and come with reflective strips for added visibility during night rides",
+    "I need to plan for a trip and want to by stuff that will be useful on the trip",
+    "Can you recommend protective gear for motorcycling, like armoured jackets, knee and elbow guards, and full-face helmets that will be good for winter rides",
+  ];
+
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -88,7 +104,25 @@ export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [selectedPhrase, setSelectedPhrase] = useState(null);
   const [showProducts, setShowProducts] = useState(false);
+  const [action, setAction] = useState(null);
+  const [activeTab, setActiveTab] = useState(1);
   const phrasesRef = useRef();
+  const [isStoreView, setIsStoreView] = useState(false);
+
+  const section1Ref = useRef(null);
+  const section2Ref = useRef(null);
+  const section3Ref = useRef(null);
+
+  const scrollToSection = (section) => {
+    setActiveTab(section); // Set the active tab when a tab is clicked
+    if (section === 1) {
+      section1Ref.current.scrollIntoView({ behavior: "smooth" });
+    } else if (section === 2) {
+      section2Ref.current.scrollIntoView({ behavior: "smooth" });
+    } else if (section === 3) {
+      section3Ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   useEffect(() => {
     if (typeof window !== "undefined") {
       sessionStorage.setItem("speech-lang", language);
@@ -228,13 +262,13 @@ export default function HomePage() {
 
   const getProductList = async (msg) => {
     setProducts([]);
-    setLoading(true);
+    // setLoading(true);
     const res = await retriveProducts(msg);
     setProducts(res?.data);
     setSelectedItems([]);
     setModel("product_listing");
     setShowProducts(true);
-    setLoading(false);
+    // setLoading(false);
   };
 
   const fetchData = async (msg) => {
@@ -307,6 +341,12 @@ export default function HomePage() {
     };
   }, [toast.show]);
 
+  const handleActionClick = (text) => {
+    if (text === action) {
+      setAction(null);
+    } else setAction(text);
+  };
+
   return (
     <>
       <div className="h-full flex flex-col overflow-hidden">
@@ -334,7 +374,7 @@ export default function HomePage() {
           </div>
         )}
         <header
-          className="bg-white p-4 w-full sticky top-0 z-20"
+          className=" p-4 w-full sticky top-0 z-20"
           style={{
             border: "1px solid rgb(108 108 108 / 30%)",
             boxShadow: " 0 0px 4px rgba(0, 0, 0, 0.25)",
@@ -348,18 +388,19 @@ export default function HomePage() {
             setOpenModal={setOpenModal}
           />
         </header>
-        {/* <div class="absolute top-0 -z-10 h-full w-full bg-white"><div class="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div></div> */}
-        <div className="flex flex-1 overflow-hidden w-full  bg-white bg-[radial-gradient(ellipse_80%80%_at_50%-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
+        {/* <div className="flex flex-1 overflow-hidden w-full  bg-white bg-[radial-gradient(ellipse_80%80%_at_50%-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"> */}
+        <div className="flex flex-1 overflow-hidden w-full  bg-white ">
           <aside className="hidden lg:block w-20 bg-transparent z-40">
             {/* Sidebar Component */}
             <Sidebar
-              component={component}
-              setComponent={setComponent}
+              component={model}
+              setComponent={setModel}
               setIsSearch={setIsSearch}
+              //   setModel={setModel}
             />
           </aside>
 
-          <main className="flex-1 overflow-y-auto relative">
+          <main className="flex-1 overflow-y-auto relative pb-[90px]">
             <div className=" flex h-full w-full">
               <Drawer open={isSearch} onClose={() => setIsSearch(false)}>
                 <Drawer.Header title="" titleIcon={() => <></>} />
@@ -379,18 +420,144 @@ export default function HomePage() {
                     </div>
                   )}
                   {model === null && (
-                    <div className="flex items-center justify-center h-full w-full">
-                      <div className="max-w-[1200px] w-full h-full p-6 flex flex-col relative items-center justify-center">
-                        <h2 className="mt-30 text-xl font-bold sm:text-5xl dark:text-white text-black">
-                          Welcome to Gear N Rides
-                        </h2>
-                        <p className="mt-5 md:mt-[40px] mb-4 md:mb-8  lg:w-[900px] sm:w-full text-center  text-gray-500 text-sm md:text-[20px]">
-                          Hey there, welcome to the interactive store of **GEAR
-                          N RIDE**! We specialize in offering high-quality
-                          motorcycle gear and accessories to enhance your riding
-                          experience.
-                        </p>
+                    <div className="flex items-center justify-center h-full w-full relative overflow-y-auto">
+                      <div className="max-w-[900px] w-full h-full relative flex">
+                        <div className="flex flex-col justify-center items-center py-10">
+                          <p className="text-xs italic bg-yellow-300 py-[7px]  px-4 rounded-lg font-bold mb-2">
+                            interactive store
+                          </p>
+                          <h3
+                            className="font-bold text-6xl text-center italic "
+                            style={{ letterSpacing: "2px" }}
+                          >
+                            Gear N Ride
+                          </h3>
+                          <span className="mt-1 text-lg italic text-center font-bold text-gray-600">
+                            Powered By Meera
+                          </span>
+                          <div className="grid grid-cols-12 gap-10 w-full">
+                            <div
+                              className={`col-span-4 ${
+                                action === "Looking for something specific"
+                                  ? "bg-black text-white scale-[1.11]"
+                                  : "bg-white text-black"
+                              }  relative 
+             p-8 rounded-lg flex flex-col justify-between h-80 cursor-pointer transition-transform transform border  hover:scale-105 mt-10`}
+                              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+                              onClick={() =>
+                                handleActionClick(
+                                  "Looking for something specific"
+                                )
+                              }
+                            >
+                              <CiShoppingTag
+                                size={30}
+                                style={{ transform: "rotate(270deg)" }}
+                              />
+                              <p className="text-xl font-bold  italic overflow-hidden">
+                                Looking for something specific
+                              </p>
+
+                              <p className="text-sm text-gray-500 italic font-semibold ">
+                                when you have something in mind and need to find
+                                it.
+                              </p>
+
+                              <p className=" text-sm font-semibold  italic flex items-center">
+                                <span className="mr-5">Start Looking</span>
+                                <HiOutlineArrowNarrowRight size={20} />
+                              </p>
+                            </div>
+
+                            <div
+                              className={`col-span-4  ${
+                                action ===
+                                "Shopping for a specific purpose or a use case"
+                                  ? "bg-black text-white scale-[1.11]"
+                                  : "bg-white text-black"
+                              }  relative 
+             p-8 rounded-lg flex flex-col justify-between  h-80 cursor-pointer transition-transform transform border  hover:scale-105 mt-10`}
+                              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+                              onClick={() =>
+                                handleActionClick(
+                                  "Shopping for a specific purpose or a use case"
+                                )
+                              }
+                            >
+                              <IoIosSearch size={30} />
+                              <p className="text-xl font-bold  italic  overflow-hidden">
+                                Shopping for a specific purpose or a use case?
+                              </p>
+                              <p className="text-sm text-gray-500 italic font-semibold  ">
+                                when you need to discuss or plan for it with an
+                                expert.
+                              </p>
+                              <p className=" text-sm font-semibold  italic flex items-center">
+                                <span className="mr-5">
+                                  Discuss With Meera{" "}
+                                </span>
+                                <HiOutlineArrowNarrowRight size={20} />
+                              </p>
+                            </div>
+
+                            <div
+                              className={`col-span-4 ${
+                                action === "Explore the products in the store"
+                                  ? "bg-black text-white scale-[1.11]"
+                                  : "bg-white text-black"
+                              }  relative 
+             p-8 rounded-lg flex flex-col justify-between   h-80 cursor-pointer transition-transform transform border  hover:scale-105 mt-10`}
+                              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+                              onClick={() => setModel("reviewStore")}
+                            >
+                              <IoStorefrontOutline size={30} />
+                              <p className="text-xl font-bold  italic overflow-hidden">
+                                Explore the products in the store.
+                              </p>
+                              <p className="text-sm text-gray-500 italic font-semibold ">
+                                when you'r just looking around and need little
+                                assistance.
+                              </p>
+                              <p className="text-sm font-semibold  italic flex items-center">
+                                <span className="mr-5">Browse The Store</span>
+                                <HiOutlineArrowNarrowRight size={20} />
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex relative w-full max-w-5xl mx-auto pt-3 gap-8 justify-center mt-8">
+                            <button
+                              onClick={() => setIsStoreView(true)}
+                              className={` flex w-60 items-center justify-center text-base font-semibold italic px-5 py-2 rounded-md transition-colors duration-300 ${"bg-black text-white hover:scale-110 hover:bg-yellow-300 hover:text-black"}`}
+                              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+                            >
+                              Store Overview
+                              <HiOutlineArrowNarrowRight
+                                size={20}
+                                className="ml-4"
+                              />
+                            </button>
+
+                            <button
+                              onClick={() => setIsStoreView(true)}
+                              className={`flex w-60 items-center justify-center text-base font-semibold italic px-5 py-2 rounded-md transition-colors duration-300 ${"bg-black text-white hover:scale-110 hover:bg-yellow-300  hover:text-black"}`}
+                              style={{ boxShadow: "10px 5px 20px  #83838336" }}
+                            >
+                              How To Use Meera
+                              <HiOutlineArrowNarrowRight
+                                size={20}
+                                className="ml-4"
+                              />
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                      {isStoreView && (
+                        <StoreOverview
+                          open={isStoreView}
+                          close={() => setIsStoreView(false)}
+                        />
+                      )}
                     </div>
                   )}
                   {isStarted && model === "" && (
@@ -401,7 +568,8 @@ export default function HomePage() {
                           selectedPhrase={selectedPhrase}
                           getProductList={getProductList}
                           phrasesRef={phrasesRef}
-                        />                        {initialData?.irrelevant_context && (
+                        />{" "}
+                        {initialData?.irrelevant_context && (
                           <div className="mt-14">
                             <h4 className="text-xl italic font-bold ">
                               Other Info
@@ -423,125 +591,230 @@ export default function HomePage() {
                       </div>
                     </div>
                   )}
-                  {/* <div className="h-full"> */}
-                  {model === "product_listing" && (
+                  {model === "reviewStore" && (
                     <div className="flex items-center justify-center h-full w-full relative overflow-y-auto">
-                      <div className="max-w-[1200px] w-full h-full relative">
+                      <div className="max-w-[1200px] w-full h-full relative ">
                         <div className="mt-10">
                           <a
                             onClick={() => {
-                              if (showProducts) {
-                                setModel("");
-                              } else {
-                                setShowProducts(true);
-                              }
+                              setModel(null);
                               setSelectedItems([]);
+                              setData(null);
                             }}
-                            className="underline text-lg text-blue-500 hover:text-blue-700 px-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex items-center gap-4 cursor-pointer font-bold text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
                           >
-                            &lt;&lt; Back
+                            <FaArrowLeftLong
+                              size={34}
+                              className="text-blue-500 dark:text-blue-300"
+                            />
+                            <span>Back</span>
                           </a>
                         </div>
-                        {showProducts ? (
-                          <ProductList
-                            products={products}
-                            selectedItems={selectedItems}
-                            setSelectedItems={setSelectedItems}
-                          />
-                        ) : (
-                          <>
-                            {isStarted && selectedItems.length > 0 && data && (
-                              <>
-                                {isProdDetail && (
-                                  <ProductDetails
-                                    open={isProdDetail}
-                                    close={() => setIsProdDetail(false)}
-                                    data={product}
-                                  />
-                                )}
-                                <section className="mt-6">
-                                  {data?.message &&
-                                    selectedItems.length > 0 &&
-                                    showSelectedProd && (
-                                      <Carousel
-                                        opts={{ align: "start" }}
-                                        className="w-full mt-4"
-                                      >
-                                        <CarouselContent>
-                                          {selectedItems?.map((card, index) => (
-                                            <CarouselItem
-                                              key={index}
-                                              className={`basis-[100%] md:basis-[50%] lg:basis-[40%] relative`}
-                                            >
-                                              <div className="flex p-4 border rounded-lg shadow-lg bg-white ">
-                                                <Image
-                                                  src={card?.images[0]?.src}
-                                                  width={100}
-                                                  height={100}
-                                                  alt={
-                                                    card?.name ||
-                                                    "Product Image"
-                                                  }
-                                                  onError={(e) => {
-                                                    e.target.src =
-                                                      "https://dummyimage.com/300/09f/fff.png";
-                                                  }}
-                                                  className="rounded-md w-[100px] h-[100px] md:w-[150px] md:h-[150px]"
-                                                />
-                                                <div className="ml-4 flex-1">
-                                                  <h4
-                                                    className="font-semibold text-sm md:text-lg line-clamp-3 overflow-hidden overflow-ellipsis min-h-16 md:min-h-20"
-                                                    dangerouslySetInnerHTML={{
-                                                      __html: card.name,
-                                                    }}
-                                                  ></h4>
-                                                  <span className="block font-semibold text-sm md:text-lg mt-1 text-gray-400">
-                                                    Price: &#8377;
-                                                    {card.price}
-                                                  </span>
-                                                  <button
-                                                    type="button"
-                                                    onClick={(e) =>
-                                                      fetchProductDetails(
-                                                        e,
-                                                        card.productId
-                                                      )
-                                                    }
-                                                    className="mt-3 inline-flex items-center justify-center py-2 px-4 text-sm font-bold text-white bg-gray-900 rounded-md transition duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2"
-                                                  >
-                                                    <IoBag className="w-4 h-4 mr-2" />
-                                                    Buy Now
-                                                  </button>
-                                                </div>
-                                              </div>
-                                            </CarouselItem>
-                                          ))}
-                                        </CarouselContent>
-                                        <CarouselPrevious />
-                                        <CarouselNext />
-                                      </Carousel>
-                                    )}
-                                  <h3 className="text-sm md:text-lg">
-                                    <MarkdownRenderer
-                                      markdown={
-                                        data?.error || data?.message || data
-                                      }
-                                    />
-                                  </h3>
-                                  {data?.level === "info" && (
-                                    <InfoLevel
-                                      content={data?.context}
-                                      onClick={onSubmit}
-                                    />
-                                  )}
-                                </section>
-                              </>
-                            )}
-                          </>
-                        )}
+                        <ExploreStore />
                       </div>
                     </div>
                   )}
+                  {/* <div className="h-full"> */}
+                  <AnimatePresence>
+                    {model === "product_listing" && (
+                      <motion.div
+                        className="flex items-center justify-center h-full w-full relative overflow-y-auto"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        layoutId={`card-${selectedPhrase}`} // Ensure this matches the layoutId of the card
+                      >
+                        <div className="max-w-[1200px] w-full h-full relative ">
+                          {/* <div className="mt-10 flex gap-5 items-center justify-between">
+                            <a
+                              onClick={() => {
+                                if (showProducts) {
+                                  setModel("");
+                                  setSelectedItems([]);
+                                } else {
+                                  setShowProducts(true);
+                                }
+                                // setSelectedItems([]);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <FaArrowLeftLong size={34} />
+                            </a>
+                            {selectedItems.length > 0 && data && (
+                              <a
+                                onClick={() => {
+                                  setShowProducts(false);
+                                }}
+                                className="cursor-pointer"
+                              >
+                                <FaArrowRightLong size={34} />
+                              </a>
+                            )}
+                          </div> */}
+                          {showProducts ? (
+                            <>
+                              <div className="mt-10 flex gap-5 items-center justify-between">
+                                <a
+                                  onClick={() => {
+                                    setModel("");
+                                    setSelectedItems([]);
+                                    setData(null);
+                                  }}
+                                  className="flex items-center gap-4 cursor-pointer font-bold text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                >
+                                  <FaArrowLeftLong
+                                    size={34}
+                                    className="text-blue-500 dark:text-blue-300"
+                                  />
+                                  <span>Back</span>
+                                </a>
+                                {data && (
+                                  <a
+                                    onClick={() => {
+                                      setShowProducts(false);
+                                    }}
+                                    className="flex items-center gap-4 cursor-pointer font-bold text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                  >
+                                    <span>Forward</span>
+                                    <FaArrowRightLong
+                                      size={34}
+                                      className="text-green-500 dark:text-green-300"
+                                    />
+                                  </a>
+                                )}
+                              </div>
+
+                              <ProductList
+                                products={products}
+                                selectedItems={selectedItems}
+                                setSelectedItems={setSelectedItems}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <div className="mt-10 flex gap-5 items-center justify-between">
+                                <a
+                                  onClick={() => {
+                                    setShowProducts(true);
+                                  }}
+                                  className="flex items-center gap-4 cursor-pointer font-bold text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                >
+                                  <FaArrowLeftLong
+                                    size={34}
+                                    className="text-blue-500 dark:text-blue-300"
+                                  />
+                                  <span>Back</span>
+                                </a>
+                              </div>
+                              {isStarted &&
+                                selectedItems.length > 0 &&
+                                data && (
+                                  <>
+                                    {isProdDetail && (
+                                      <ProductDetails
+                                        open={isProdDetail}
+                                        close={() => setIsProdDetail(false)}
+                                        data={product}
+                                      />
+                                    )}
+                                    <section className="mt-6 pb-20">
+                                      {data?.message &&
+                                        selectedItems.length > 0 &&
+                                        showSelectedProd && (
+                                          <Carousel
+                                            opts={{ align: "start" }}
+                                            className="w-full mt-4"
+                                          >
+                                            <CarouselContent>
+                                              {selectedItems?.map(
+                                                (card, index) => (
+                                                  <CarouselItem
+                                                    key={index}
+                                                    className={`basis-[100%] md:basis-[50%] lg:basis-[40%] relative`}
+                                                  >
+                                                    <div className="flex p-4 border rounded-lg shadow-lg bg-white ">
+                                                      <Image
+                                                        src={
+                                                          card?.images[0]?.src
+                                                        }
+                                                        width={100}
+                                                        height={100}
+                                                        alt={
+                                                          card?.name ||
+                                                          "Product Image"
+                                                        }
+                                                        onError={(e) => {
+                                                          e.target.src =
+                                                            "https://dummyimage.com/300/09f/fff.png";
+                                                        }}
+                                                        className="rounded-md w-[100px] h-[100px] md:w-[150px] md:h-[150px]"
+                                                      />
+                                                      <div className="ml-4 flex-1">
+                                                        <h4
+                                                          className="font-semibold text-sm md:text-lg line-clamp-3 overflow-hidden overflow-ellipsis min-h-16 md:min-h-20"
+                                                          dangerouslySetInnerHTML={{
+                                                            __html: card.name,
+                                                          }}
+                                                        ></h4>
+                                                        <span className="block font-semibold text-sm md:text-lg mt-1 text-gray-400">
+                                                          Price: &#8377;
+                                                          {card.price}
+                                                        </span>
+                                                        <button
+                                                          type="button"
+                                                          onClick={(e) =>
+                                                            fetchProductDetails(
+                                                              e,
+                                                              card.productId
+                                                            )
+                                                          }
+                                                          className="mt-3 inline-flex items-center justify-center py-2 px-4 text-sm font-bold text-white bg-gray-900 rounded-md transition duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2"
+                                                        >
+                                                          <IoBag className="w-4 h-4 mr-2" />
+                                                          Buy Now
+                                                        </button>
+                                                      </div>
+                                                      <div className="absolute top-0 right-0 cursor-pointer">
+                                                        <MdCancel
+                                                          size={25}
+                                                          onClick={() =>
+                                                            handleRemoveItem(
+                                                              card?.productId
+                                                            )
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                  </CarouselItem>
+                                                )
+                                              )}
+                                            </CarouselContent>
+                                            <CarouselPrevious />
+                                            <CarouselNext />
+                                          </Carousel>
+                                        )}
+                                      <h3 className="text-sm md:text-lg">
+                                        <MarkdownRenderer
+                                          markdown={
+                                            data?.error || data?.message || data
+                                          }
+                                        />
+                                      </h3>
+                                      {data?.level === "info" && (
+                                        <InfoLevel
+                                          content={data?.context}
+                                          onClick={onSubmit}
+                                        />
+                                      )}
+                                    </section>
+                                  </>
+                                )}
+                            </>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   {model === "category_list" && (
                     <InView
                       variants={{
@@ -649,109 +922,6 @@ export default function HomePage() {
                       <ChatInput />
                     </InView>
                   )}
-                  {/* {!loading && model === "" && data && (
-                    <InView
-                      variants={{
-                        hidden: {
-                          opacity: 0,
-                          y: 100,
-                          filter: "blur(4px)",
-                        },
-                        visible: {
-                          opacity: 1,
-                          y: 0,
-                          filter: "blur(0px)",
-                        },
-                      }}
-                      viewOptions={{ margin: "0px 0px -200px 0px" }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                      {isProdDetail && (
-                        <ProductDetails
-                          open={isProdDetail}
-                          close={() => setIsProdDetail(false)}
-                          data={product}
-                        />
-                      )}
-                      <div className="h-full w-full overflow-y-auto">
-                        <div className="w-full flex items-center justify-center">
-                          <div className="w-full h-full pt-4 pl-2 pb-24 pr-2 flex flex-col relative ml-0  md:ml-20">
-                            <section className="h-full mt-4">
-                              {data?.message &&
-                                selectedItems.length > 0 &&
-                                showSelectedProd && (
-                                  <Carousel
-                                    opts={{ align: "start" }}
-                                    className="w-full mt-4"
-                                  >
-                                    <CarouselContent>
-                                      {selectedItems?.map((card, index) => (
-                                        <CarouselItem
-                                          key={index}
-                                          className={`basis-[100%] md:basis-[50%] lg:basis-[33%] relative`}
-                                        >
-                                          <div className="flex p-4 border rounded-lg shadow-lg bg-white ">
-                                            <Image
-                                              src={card?.images[0]?.src}
-                                              width={150}
-                                              height={150}
-                                              alt={
-                                                card?.name || "Product Image"
-                                              }
-                                              className="rounded-md"
-                                            />
-                                            <div className="ml-4 flex-1">
-                                              <h4
-                                                className="font-semibold text-sm md:text-lg line-clamp-3 overflow-hidden overflow-ellipsis min-h-16 md:min-h-20"
-                                                dangerouslySetInnerHTML={{
-                                                  __html: card.name,
-                                                }}
-                                              ></h4>
-                                              <span className="block font-semibold text-sm md:text-lg mt-1 text-gray-400">
-                                                Price: &#8377;
-                                                {card.price}
-                                              </span>
-                                              <button
-                                                type="button"
-                                                onClick={(e) =>
-                                                  fetchProductDetails(
-                                                    e,
-                                                    card.productId
-                                                  )
-                                                }
-                                                className="mt-3 inline-flex items-center justify-center py-2 px-4 text-sm font-bold text-white bg-gray-900 rounded-md transition duration-200 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2"
-                                              >
-                                                <IoBag className="w-4 h-4 mr-2" />
-                                                Buy Now
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </CarouselItem>
-                                      ))}
-                                    </CarouselContent>
-                                    <CarouselPrevious />
-                                    <CarouselNext />
-                                  </Carousel>
-                                )}
-                              <h3 className="text-sm md:text-lg">
-                                <MarkdownRenderer
-                                  markdown={
-                                    data?.error || data?.message || data
-                                  }
-                                />
-                              </h3>
-                              {data?.level === "info" && (
-                                <InfoLevel
-                                  content={data?.context}
-                                  onClick={onSubmit}
-                                />
-                              )}
-                            </section>
-                          </div>
-                        </div>
-                      </div>
-                    </InView>
-                  )} */}
                 </div>
               </div>
             </div>
@@ -786,7 +956,7 @@ export default function HomePage() {
             </Modal>
           </main>
         </div>
-        <div className="w-full sticky bottom-0" style={{ zIndex: 10 }}>
+        <div className="w-full fixed bottom-0" style={{ zIndex: 10 }}>
           <div
             className="hidden md:block relative"
             style={{
@@ -799,7 +969,7 @@ export default function HomePage() {
               paddingBottom: "0.75rem",
             }}
           >
-            {selectedItems.length > 0 && (
+            {/* {selectedItems.length > 0 && (
               <div className="flex relative w-full max-w-4xl mx-auto -mb-2 pt-3">
                 <AnimatePresence>
                   {selectedItems.map((item, index) => (
@@ -824,7 +994,13 @@ export default function HomePage() {
                   ))}
                 </AnimatePresence>
               </div>
-            )}
+            )} */}
+
+            {/* {model === null && action && (
+              <div className="flex relative w-full max-w-2xl mx-auto -mb-2 pt-3">
+                <p className="text-xl font-semibold italic">{action}</p>
+              </div>
+            )} */}
 
             <PlaceholdersAndVanishTextarea
               value={searchText}
@@ -832,9 +1008,14 @@ export default function HomePage() {
               isRecording={isRecording}
               stopRecording={stopRecording}
               startRecording={startRecording}
-              placeholders={placeholders}
+              placeholders={
+                action === "Shopping for a specific purpose or a use case"
+                  ? placeholders2
+                  : placeholders1
+              }
               onChange={handleChange}
               onSubmit={onSubmit}
+              keepFocus={action}
             />
           </div>
           <div
@@ -885,14 +1066,7 @@ export default function HomePage() {
                       isRecording ? "opacity-50" : ""
                     }`}
                   />
-                  <button
-                    type="button"
-                    disabled={isRecording}
-                    onClick={() => onSubmit(searchText)}
-                    className="absolute inset-y-0 right-1 flex items-center z-20"
-                  >
-                    <IoMdSend size={24} />
-                  </button>
+
                   {isRecording && (
                     <div className="absolute inset-0 flex items-center justify-center h-8 top-1 text-lg rounded-md z-10 pointer-events-none">
                       <div
@@ -954,18 +1128,47 @@ export default function HomePage() {
                   )}
                 </div>
               </div>
-
-              {isRecording ? (
-                <button className="ml-2 rounded-full" onClick={stopRecording}>
-                  <FaStopCircle size={40} />
-                </button>
-              ) : (
-                <button
-                  className="ml-2 bg-black rounded-full p-2"
-                  onClick={startRecording}
+              {searchText !== "" ? (
+                <motion.div
+                  className="ml-2 rounded-full bg-black w-10 h-10 flex items-center justify-center"
+                  whileHover={{ scale: 1.1 }} // scale up on hover
+                  whileTap={{ scale: 0.9 }} // scale down when pressed
                 >
-                  <ImMic size={24} color="white" />
-                </button>
+                  <button
+                    type="button"
+                    disabled={isRecording}
+                    onClick={() => onSubmit(searchText)}
+                    className="text-white"
+                  >
+                    <motion.div
+                      style={{ scale: transformScale }} // apply transform animation
+                    >
+                      <IoMdSend size={24} className="ml-1" />
+                    </motion.div>
+                  </button>
+                </motion.div>
+              ) : (
+                <>
+                  {isRecording ? (
+                    <motion.button
+                      className="ml-2 rounded-full"
+                      onClick={stopRecording}
+                      whileHover={{ rotate: 360 }} // rotate on hover
+                      whileTap={{ scale: 0.9 }} // scale down on tap
+                    >
+                      <FaStopCircle size={40} />
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      className="ml-2 bg-black rounded-full p-2"
+                      onClick={startRecording}
+                      whileHover={{ scale: 1.2 }} // scale up on hover
+                      whileTap={{ scale: 0.9 }} // scale down on tap
+                    >
+                      <ImMic size={24} color="white" />
+                    </motion.button>
+                  )}
+                </>
               )}
             </div>
           </div>

@@ -5,7 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { AiOutlineEnter } from "react-icons/ai";
 import { ImMic } from "react-icons/im";
-import { FaStopCircle } from "react-icons/fa";
+import { FaPlusCircle, FaStopCircle } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
 
 export function PlaceholdersAndVanishTextarea({
   value,
@@ -16,6 +17,7 @@ export function PlaceholdersAndVanishTextarea({
   placeholders,
   onChange,
   onSubmit,
+  keepFocus,
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const [charIndex, setCharIndex] = useState(0); // State for typewriter effect
@@ -25,7 +27,7 @@ export function PlaceholdersAndVanishTextarea({
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
-    }, 5000);
+    }, 7000);
   };
 
   const startTypewriter = () => {
@@ -40,7 +42,7 @@ export function PlaceholdersAndVanishTextarea({
           return prev;
         }
       });
-    }, 100);
+    }, 30);
   };
 
   useEffect(() => {
@@ -195,6 +197,12 @@ export function PlaceholdersAndVanishTextarea({
     }
   };
 
+  useEffect(() => {
+    if (keepFocus && textareaRef.current) {
+      textareaRef.current.focus(); // Set focus on textarea
+    }
+  }, [keepFocus]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     vanishAndSubmit();
@@ -212,156 +220,161 @@ export function PlaceholdersAndVanishTextarea({
   };
 
   return (
-    <div className="relative flex w-full items-center max-w-4xl mx-auto pt-3">
-      <form
-        className={cn("w-full relative flex")}
-        style={{
-          background: "#f5f5f7",
-          borderRadius: "15px",
-          border: "2px solid #c8c8ca",
-        }}
-        onSubmit={handleSubmit}
-      >
-        <canvas
-          className={cn(
-            "absolute pointer-events-none text-base transform scale-50 top-[20%] left-5 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
-            !animating ? "opacity-0" : "opacity-100"
-          )}
-          ref={canvasRef}
-        />
-        <div className="relative w-full">
-          {!isFocused && (
-            <span className="absolute top-4 left-10 h-6 w-1 bg-black animate-blink"></span>
-          )}
-          <textarea
-            onChange={(e) => {
-              if (!animating) {
-                setValue(e.target.value);
-                onChange && onChange(e);
-              }
-            }}
-            ref={textareaRef}
-            value={value}
-            onKeyDown={handleKeyDown}
-            rows={1}
-            onFocus={(e) => {
-              setIsFocused(true);
-              e.target.rows = 4;
-            }}
-            onBlur={(e) => {
-              setIsFocused(false);
-              if (!value) e.target.rows = 1;
-            }}
-            className={cn(
-              "ml-4 w-full pt-4 relative text-xl z-10 border-none dark:text-white bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
-              "overflow-y-auto",
-              "max-h-40",
-              "transition-all duration-500 ease-in-out",
-              "resize-none",
-              animating && "text-transparent dark:text-transparent"
-            )}
-            style={{
-              height: isFocused ? "136px" : "53px",
-              outline: "none",
-            }}
-          />
-        </div>
-        <div className="w-20 flex items-end justify-center">
-          <button
-            disabled={!value || isRecording}
-            type="submit"
-            className="z-10 mb-[14px]  h-8 w-8 rounded-md bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-gray-100 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
-          >
-            <AiOutlineEnter size={18} />
-          </button>
-        </div>
-      </form>
-      {isRecording ? (
-        <button className="ml-5 rounded-full h-10 w-10" onClick={stopRecording}>
-          <FaStopCircle size={40} />
-        </button>
-      ) : (
-        <button
-          className="ml-5 bg-black rounded-full p-2 h-10 w-10"
-          onClick={startRecording}
+    <div className="w-full flex items-center justify-center">
+      <div className="relative flex w-full max-w-[900px] items-center  pt-3">
+        <form
+          className={cn("w-full relative flex ml-20")}
+          style={{
+            background: "#f5f5f7",
+            borderRadius: "15px",
+            border: "2px solid #c8c8ca",
+          }}
+          onSubmit={handleSubmit}
         >
-          <ImMic size={24} color="white" />
-        </button>
-      )}
-      {isRecording && (
-        <div style={{  height: "30px" ,width:"100px" }}>
-          <div
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "100%",
-              backgroundColor: "#00bcd4",
-              margin: "0 2px",
-              animation: "wave-animation 1s infinite ease-in-out",
-              animationDelay: "0s",
-            }}
-          ></div>
-          <div
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "100%",
-              backgroundColor: "#00bcd4",
-              margin: "0 2px",
-              animation: "wave-animation 1s infinite ease-in-out",
-              animationDelay: "0.1s",
-            }}
-          ></div>
-          <div
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "100%",
-              backgroundColor: "#00bcd4",
-              margin: "0 2px",
-              animation: "wave-animation 1s infinite ease-in-out",
-              animationDelay: "0.2s",
-            }}
-          ></div>
-          <div
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "100%",
-              backgroundColor: "#00bcd4",
-              margin: "0 2px",
-              animation: "wave-animation 1s infinite ease-in-out",
-              animationDelay: "0.3s",
-            }}
-          ></div>
-          <div
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "100%",
-              backgroundColor: "#00bcd4",
-              margin: "0 2px",
-              animation: "wave-animation 1s infinite ease-in-out",
-              animationDelay: "0.4s",
-            }}
-          ></div>
-        </div>
-      )}
-      {/* Placeholder display */}
-      <div className="absolute mt-11 top-0 left-16 transform -translate-y-1/2 flex">
-        <AnimatePresence mode="wait">
-          {!value && (
-            <motion.span
-              className="text-gray-500"
-              key={currentPlaceholder}
-              initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, x: 1 }}
+          <canvas
+            className={cn(
+              "absolute pointer-events-none text-base transform scale-50 top-[20%] left-5 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
+              !animating ? "opacity-0" : "opacity-100"
+            )}
+            ref={canvasRef}
+          />
+          <div className="relative w-full">
+            {!isFocused && (
+              <span className="absolute top-4 left-10 h-6 w-1 bg-black animate-blink"></span>
+            )}
+            <textarea
+              onChange={(e) => {
+                if (!animating) {
+                  setValue(e.target.value);
+                  onChange && onChange(e);
+                }
+              }}
+              ref={textareaRef}
+              value={value}
+              onKeyDown={handleKeyDown}
+              rows={1}
+              onFocus={(e) => {
+                setIsFocused(true);
+                e.target.rows = 4;
+              }}
+              onBlur={(e) => {
+                setIsFocused(false);
+                if (!value) e.target.rows = 1;
+              }}
+              className={cn(
+                "ml-4 w-full pt-4 relative text-xl z-10 border-none dark:text-white bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
+                "overflow-y-auto",
+                "max-h-40",
+                "transition-all duration-500 ease-in-out",
+                "resize-none",
+                animating && "text-transparent dark:text-transparent"
+              )}
+              style={{
+                height: isFocused ? "136px" : "53px",
+                outline: "none",
+              }}
+            />
+          </div>
+          <div className="w-20 flex items-end justify-center">
+            <button
+              disabled={!value || isRecording}
+              type="submit"
+              className="z-10 mb-[14px]  h-8 w-8 rounded-md bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-gray-100 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
             >
-              {placeholders[currentPlaceholder].slice(0, charIndex)}{" "}
-            </motion.span>
-          )}
-        </AnimatePresence>
+              <AiOutlineEnter size={18} />
+            </button>
+          </div>
+        </form>
+        {isRecording ? (
+          <button
+            className="ml-5 rounded-full h-10 w-10"
+            onClick={stopRecording}
+          >
+            <FaStopCircle size={40} />
+          </button>
+        ) : (
+          <button
+            className="ml-5 bg-black rounded-full p-2 h-10 w-10"
+            onClick={startRecording}
+          >
+            <ImMic size={24} color="white" />
+          </button>
+        )}
+        {isRecording && (
+          <div style={{ height: "30px", width: "100px" }}>
+            <div
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "100%",
+                backgroundColor: "#00bcd4",
+                margin: "0 2px",
+                animation: "wave-animation 1s infinite ease-in-out",
+                animationDelay: "0s",
+              }}
+            ></div>
+            <div
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "100%",
+                backgroundColor: "#00bcd4",
+                margin: "0 2px",
+                animation: "wave-animation 1s infinite ease-in-out",
+                animationDelay: "0.1s",
+              }}
+            ></div>
+            <div
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "100%",
+                backgroundColor: "#00bcd4",
+                margin: "0 2px",
+                animation: "wave-animation 1s infinite ease-in-out",
+                animationDelay: "0.2s",
+              }}
+            ></div>
+            <div
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "100%",
+                backgroundColor: "#00bcd4",
+                margin: "0 2px",
+                animation: "wave-animation 1s infinite ease-in-out",
+                animationDelay: "0.3s",
+              }}
+            ></div>
+            <div
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "100%",
+                backgroundColor: "#00bcd4",
+                margin: "0 2px",
+                animation: "wave-animation 1s infinite ease-in-out",
+                animationDelay: "0.4s",
+              }}
+            ></div>
+          </div>
+        )}
+        {/* Placeholder display */}
+        <div className="absolute mt-11 top-0 left-36 transform -translate-y-1/2 flex">
+          <AnimatePresence mode="wait">
+            {!value && (
+              <motion.span
+                className="text-gray-500 max-w-[600px]"
+                key={currentPlaceholder}
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: 1 }}
+              >
+                {placeholders[currentPlaceholder].slice(0, charIndex)}{" "}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
