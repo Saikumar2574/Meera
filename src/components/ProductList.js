@@ -123,7 +123,7 @@ export default function ProductList({
     return <div>No products available</div>;
   }
 
-  const ProductCard = (card) => {
+  const ProductCard = ({card}) => {
     return (
       <div
         onClick={() => setProductView(card)}
