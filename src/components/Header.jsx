@@ -80,7 +80,8 @@ export function Header({ reset, setOpenModal }) {
           />
         </Link>
         <div className="hidden md:block ">
-          {/* <ModeToggle/> */}
+          <div className="flex items-center gap-10">
+          <ModeToggle/>
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
@@ -98,6 +99,7 @@ export function Header({ reset, setOpenModal }) {
               <span className="hidden md:inline ml-3">Login</span>
             </button>
           )}
+          </div>
         </div>
         <button
           onClick={() => setMobileMenu(true)}

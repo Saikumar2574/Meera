@@ -10,7 +10,7 @@ function StoreOverview({ open, close }) {
         content: {
           base: "relative  h-full md:h-[90%] w-[900px]",
           inner:
-            "relative flex max-h-full flex-col bg-[#edf1f8] shadow dark:bg-gray-700 h-full rounded-none md:rounded-lg",
+            "relative flex max-h-full flex-col bg-[#edf1f8] shadow dark:bg-[#edf1f8] h-full rounded-none md:rounded-lg",
         },
       }}
       onClose={close}
@@ -27,18 +27,18 @@ function StoreOverview({ open, close }) {
 
       <Modal.Body>
         <section className=" h-full  w-full p-0 md:p-5 pb-20">
-          <h2 className="font-bold text-3xl">
+          <h2 className="font-bold text-3xl text-black">
             Capabilities of a Virtual Assistant in Interactive Shopping:
           </h2>
           <div className="mt-6">
-            <h5 className="font-bold text-xl">
+            <h5 className="font-bold text-xl text-black">
               1. Personalized Shopping Experience
             </h5>
             <div className="p-4">
               <h6 className="font-bold text-gray-800 italic  text-lg">
                 Understanding Shopper Intent:
               </h6>
-              <p className="text-lg">
+              <p className="text-lg text-black">
                 The assistant interprets customer needs from vague inputs and
                 provides specific recommendations, even suggesting complementary
                 products.
@@ -48,7 +48,7 @@ function StoreOverview({ open, close }) {
               <h6 className="font-bold text-gray-800 italic  text-lg">
                 Profile Management:
               </h6>
-              <p className="text-lg">
+              <p className="text-lg text-black">
                 Helps customers set up and update their preferences, style
                 choices, and past purchases to continuously refine future
                 recommendations.
@@ -58,7 +58,7 @@ function StoreOverview({ open, close }) {
               <h6 className="font-bold text-gray-800 italic  text-lg">
                 Behavioral Learning:
               </h6>
-              <p className="text-lg">
+              <p className="text-lg text-black">
                 Learns from user behavior, improving product suggestions and
                 interactions based on historical data, shopping habits, and
                 preferences.
@@ -66,14 +66,14 @@ function StoreOverview({ open, close }) {
             </div>
           </div>
           <div className="mt-6">
-            <h5 className="font-bold text-xl">
+            <h5 className="font-bold text-xl text-black">
               2. Product Discovery and Recommendations
             </h5>
             <div className="p-4">
               <h6 className="font-bold text-gray-800 italic  text-lg">
                 Curated Lists:
               </h6>
-              <p className="text-lg">
+              <p className="text-lg text-black">
                 Offers personalized shopping lists based on trends, user
                 preferences, seasons, or special events.
               </p>
@@ -82,7 +82,7 @@ function StoreOverview({ open, close }) {
               <h6 className="font-bold text-gray-800 italic  text-lg">
                 Product Customization:
               </h6>
-              <p className="text-lg">
+              <p className="text-lg text-black">
                 Assists in configuring products to user specifications, such as
                 color, size, material, or other customizations for tailored
                 items.
@@ -92,7 +92,7 @@ function StoreOverview({ open, close }) {
               <h6 className="font-bold text-gray-800 italic  text-lg">
                 Cross-Selling & Up-Selling:
               </h6>
-              <p className="text-lg">
+              <p className="text-lg text-black">
                 Suggests related products, accessories, or premium versions of
                 selected items to enhance the shopping basket.
               </p>

@@ -221,7 +221,7 @@ export default function ProductList({
                   }}
                 />
               </button>
-              <span className="ml-4 font-bold text-[16px]">A2B7</span>
+              <span className="ml-4 font-bold text-[16px] text-black">A2B7</span>
               {/* {card.recommended && (
               <span
                 className="ml-auto font-bold text-[16px] italic"
@@ -915,11 +915,13 @@ export default function ProductList({
 
               <h3 className="text-2xl font-bold my-5">Good Match</h3>
               <div className="grid grid-cols-2 md:grid-cols-4  gap-5 md:gap-10">
-                {products?.good_match?.map((card, index) => (
+                {products?.good_match?.map((card, index) => {
+                  debugger
+                  return(
                   <div key={index} className="relative group">
                     <ProductCard card={card} />
                   </div>
-                ))}
+                )})}
               </div>
               <h3 className="text-2xl font-bold my-5">Partial Match</h3>
               <div className="grid grid-cols-2 md:grid-cols-4  gap-5 md:gap-10">

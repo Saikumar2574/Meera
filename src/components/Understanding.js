@@ -23,7 +23,7 @@ function Understanding({
       <div className="grid grid-cols-12 gap-0 md:gap-8 mt-6 w-full">
         {/* 8-column layout */}
         <div
-          className="col-span-12 md:col-span-8 bg-white p-5 md:p-10 rounded-2xl border"
+          className="col-span-12 md:col-span-8 p-5 md:p-10 rounded-2xl border"
           style={{ boxShadow: "10px 5px 20px  #83838336" }}
         >
           <h4 className="text-xl italic font-bold ">My Understanding</h4>
@@ -38,7 +38,7 @@ function Understanding({
 
         {/* 4-column layout */}
         <div
-          className="col-span-12 md:col-span-4 mt-6 md:mt-0 bg-white p-5 md:p-10 rounded-2xl flex justify-center items-center flex-col border"
+          className="col-span-12 md:col-span-4 mt-6 md:mt-0  p-5 md:p-10 rounded-2xl flex justify-center items-center flex-col border"
           style={{ boxShadow: "10px 5px 20px  #83838336" }}
         >
           <GaugeChart
@@ -67,7 +67,7 @@ function Understanding({
       </div>
       <div
         ref={phrasesRef}
-        className="bg-white p-5 md:p-10  rounded-2xl mt-6 border"
+        className=" p-5 md:p-10  rounded-2xl mt-6 border"
         style={{ boxShadow: "10px 5px 20px  #83838336" }}
       >
         <h4 className="text-xl italic font-bold ">Shopping List</h4>

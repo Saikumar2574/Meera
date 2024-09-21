@@ -69,7 +69,7 @@ function ExploreStore({ data }) {
                       />
                     </button>
 
-                    <span className="ml-4 font-bold text-[12px] md:text-base">
+                    <span className="ml-4 font-bold text-[12px] text-black md:text-base">
                       A2B7
                     </span>
 

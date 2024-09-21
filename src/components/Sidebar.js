@@ -65,7 +65,7 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
       <div>
         <Tooltip content={<>New&nbsp;Conversation</>} placement="right">
           <button
-            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
+            className={`p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group ${pathname.startsWith('/search') || pathname === "/" && "bg-gray-200"}`}
             onClick={()=>route.push("/")}
           >
             <FaPlus
@@ -103,7 +103,7 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
       <div>
         <Tooltip content={<>Browse&nbsp;the&nbsp;store</>} placement="right">
           <button
-            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
+            className={`p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group ${pathname.startsWith('/shop') && "bg-gray-200"}`}
             onClick={() => {
               route.push("/shop")
             }}
