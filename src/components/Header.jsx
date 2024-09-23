@@ -16,8 +16,10 @@ import Cart from "./Cart";
 import Whishlist from "./Whishlist";
 import Search from "./Search";
 import { ModeToggle } from "./ScreenMode";
+import { useRouter } from "next/navigation";
 
 export function Header({ reset, setOpenModal }) {
+  const router = useRouter()
   const [showAuth, setShowAuth] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -58,27 +60,32 @@ export function Header({ reset, setOpenModal }) {
   };
 
   return (
-    <>
-    
+    <header
+      className=" w-full h-14 sticky top-0 z-20 px-5 py-2 flex items-center bg-white"
+      style={{
+        border: "1px solid rgb(108 108 108 / 30%)",
+        boxShadow: " 0 0px 4px rgba(0, 0, 0, 0.25)",
+      }}
+    >
       <div className="flex h-12 w-full shrink-0 justify-between items-center md:px-6">
-        <img src="/logo144.png" className="w-10 h-10 inline md:hidden" />
+        {/* <img src="/logo144.png" className="w-10 h-10 inline md:hidden" /> */}
         <Link
-          href="#"
+          href="/"
           className="flex items-center justify-center"
           prefetch={false}
-          onClick={reset}
         >
           <img
             src="https://gearnride.in/wp-content/uploads/2023/04/GNR-Shop-SVG-2.svg"
-            className="w-28 md:w-40"
+            className="w-28 md:w-32 md:h-16"
           />
         </Link>
         <div className="hidden md:block ">
-          {/* <ModeToggle/> */}
+          <div className="flex items-center gap-10">
+          <ModeToggle/>
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className=" bg-gray-400 md:bg-white dark:md:bg-black border-black dark:border-white border-[1.5px] flex text-black dark:text-white dark:hover:text-black dark:hover:bg-white hover:text-white hover:bg-black font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
+              className="  flex text-black hover:text-gray-600  font-semibold text-lg   rounded-full md:rounded-full"
             >
               <MdLogout size={26} />
               <span className="hidden md:inline ml-3">Logout</span>
@@ -86,13 +93,13 @@ export function Header({ reset, setOpenModal }) {
           ) : (
             <button
               onClick={() => setShowAuth(true)}
-              style={{ boxShadow: "10px 5px 20px  #83838336" }}
-              className="bg-gray-400 md:bg-white flex text-black hover:text-white hover:bg-black font-semibold text-lg px-[0.40rem] md:px-5 py-[6px] rounded-full md:rounded-full"
+              className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
             >
               <MdPerson size={26} />
               <span className="hidden md:inline ml-3">Login</span>
             </button>
           )}
+          </div>
         </div>
         <button
           onClick={() => setMobileMenu(true)}
@@ -188,7 +195,7 @@ export function Header({ reset, setOpenModal }) {
           </Drawer.Items>
         </Drawer>
       </div>
-    </>
+    </header>
   );
 }
 

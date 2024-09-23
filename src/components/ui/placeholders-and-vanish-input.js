@@ -221,7 +221,7 @@ export function PlaceholdersAndVanishTextarea({
 
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="relative flex w-full max-w-[900px] items-center  pt-3">
+      <div className="relative flex w-full max-w-[1200px] items-center  pt-3">
         <form
           className={cn("w-full relative flex ml-20")}
           style={{
@@ -262,7 +262,7 @@ export function PlaceholdersAndVanishTextarea({
                 if (!value) e.target.rows = 1;
               }}
               className={cn(
-                "ml-4 w-full pt-4 relative text-xl z-10 border-none dark:text-white bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
+                "ml-4 w-full pt-4 relative text-xl z-10 border-none dark:text-black bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
                 "overflow-y-auto",
                 "max-h-40",
                 "transition-all duration-500 ease-in-out",
@@ -279,7 +279,7 @@ export function PlaceholdersAndVanishTextarea({
             <button
               disabled={!value || isRecording}
               type="submit"
-              className="z-10 mb-[14px]  h-8 w-8 rounded-md bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-gray-100 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
+              className="z-10 mb-[14px]  h-8 w-8 rounded-md bg-gray-900  dark:text-white text-gray-100 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
             >
               <AiOutlineEnter size={18} />
             </button>

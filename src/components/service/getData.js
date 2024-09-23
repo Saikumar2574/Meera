@@ -19,12 +19,10 @@ export const getData = async (msg) => {
   }
 };
 
-export const retriveProducts = async (msg) => {
-  const token = getToken();
+export const retriveProducts = async (data) => {
+  // const token = getToken();
   try {
-    const response = await apiAxiosInstance.get(
-      `/retrieve?query=${encodeURIComponent(msg)}`
-    );
+    const response = await apiAxiosInstance.post(`/retrieve`, data);
     return response.data;
   } catch (err) {
     console.error("Request failed:", err.response?.data || err.message);
@@ -33,7 +31,6 @@ export const retriveProducts = async (msg) => {
 };
 
 export const getQueryData = async (ids, msg) => {
-  const token = getToken();
   try {
     const response = await apiAxiosInstance.get(
       `/query?context=true&ids=${ids}&message=${msg}`
@@ -45,7 +42,6 @@ export const getQueryData = async (ids, msg) => {
 };
 
 export const getProductDetails = async (id) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.get(`/product?id=${id}`);
     return response.data;
@@ -55,7 +51,6 @@ export const getProductDetails = async (id) => {
 };
 
 export const getCartDetails = async () => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.get(`/cart`);
     return response.data;
@@ -65,7 +60,6 @@ export const getCartDetails = async () => {
 };
 
 export const addCart = async (obj) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.post(`/cart/add`, {
       items: [obj],
@@ -77,7 +71,6 @@ export const addCart = async (obj) => {
 };
 
 export const removeCart = async (obj) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.post(`/cart/remove`, obj);
     return response.data;
@@ -87,7 +80,6 @@ export const removeCart = async (obj) => {
 };
 
 export const getWhishlistDetails = async () => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.get(`/wishlists`);
     return response.data;
@@ -96,7 +88,6 @@ export const getWhishlistDetails = async () => {
   }
 };
 export const addWishlist = async (name) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.post(`/wishlists`, {
       wishlist_name: name,
@@ -108,7 +99,6 @@ export const addWishlist = async (name) => {
 };
 
 export const deleteWishlist = async (id) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.delete(`/wishlists`, {
       data: {
@@ -122,7 +112,6 @@ export const deleteWishlist = async (id) => {
 };
 
 export const addWishlistItem = async (listId, prodId) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.post(`/wishlists/add`, {
       product_id: prodId,
@@ -134,7 +123,6 @@ export const addWishlistItem = async (listId, prodId) => {
   }
 };
 export const removeWishlistItem = async (listId, prodId) => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.post(`/wishlists/remove`, {
       product_id: prodId,
@@ -147,7 +135,6 @@ export const removeWishlistItem = async (listId, prodId) => {
 };
 
 export const getHistory = async () => {
-  const token = getToken();
   try {
     const response = await authAxiosInstance.get(`/history`);
     return response.data;
@@ -167,6 +154,28 @@ export const getAudioText = async (audio) => {
           Authorization: `Bearer ${token}`,
         },
       }
+    );
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
+//store api's
+
+export const getParentCategories = async () => {
+  try {
+    const response = await authAxiosInstance.get(`/categories`);
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
+export const getChildCategories = async (id) => {
+  try {
+    const response = await authAxiosInstance.get(
+      `/categories?category_id=${id}&category_type=child&page=1&per_page=2`
     );
     return response.data;
   } catch (err) {

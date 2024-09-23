@@ -19,15 +19,18 @@ import Whishlist from "./Whishlist";
 import { FaCog, FaPlus } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { IoStorefrontOutline } from "react-icons/io5";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
+  const route = useRouter()
   const [openCart, setOpenCart] = useState(false);
   const [cartDetails, setCartDetails] = useState(null);
   const [openWishList, setOpenWishList] = useState(false);
   const [wishtList, setWishtList] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [language, setLanguage] = useState("en-US");
-
+  const pathname = usePathname();
   const toggleCart = async () => {
     const res = await getCartDetails();
     if (res) {
@@ -62,16 +65,13 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
       <div>
         <Tooltip content={<>New&nbsp;Conversation</>} placement="right">
           <button
-            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
-            onClick={() => {
-              setComponent(null);
-              setIsSearch(false);
-            }}
+            className={`p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group ${pathname.startsWith('/search') || pathname === "/" && "bg-gray-200"}`}
+            onClick={()=>route.push("/")}
           >
             <FaPlus
               size={22}
               className={`${
-                component === null
+                pathname.startsWith('/search') || pathname === "/"
                   ? "text-black"
                   : "text-gray-400 group-hover:text-[#b6b5d4]"
               } `}
@@ -103,15 +103,15 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
       <div>
         <Tooltip content={<>Browse&nbsp;the&nbsp;store</>} placement="right">
           <button
-            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group"
+            className={`p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group ${pathname.startsWith('/shop') && "bg-gray-200"}`}
             onClick={() => {
-              setComponent("reviewStore")
+              route.push("/shop")
             }}
           >
             <IoStorefrontOutline
               size={22}
               className={`${
-                component === "reviewStore"
+                pathname.startsWith('/shop')
                   ? "text-black"
                   : "text-gray-400 group-hover:text-[#b6b5d4]"
               } `}

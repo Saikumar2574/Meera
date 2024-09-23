@@ -143,7 +143,7 @@ function ProductDetails({ open, close, data }) {
         }}
       />
       <Modal.Body>
-        <section className=" h-full flex justify-center items-center p-0 md:p-5 pb-20">
+        <section className=" h-full flex justify-center items-center p-0 md:p-5 pb-28">
           <div class="mx-auto max-w-7xl h-full">
             <div className="relative">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-10 xl:gap-x-20">
@@ -250,7 +250,7 @@ function ProductDetails({ open, close, data }) {
                 {/* Right Side: Content Section */}
                 <div className="px-0 md:px-4 pb-8 lg:col-span-7 xl:pr-16">
                   <h1
-                    className="text-3xl font-bold text-gray-900 sm:text-4xl"
+                    className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl"
                     dangerouslySetInnerHTML={{
                       __html: data?.name,
                     }}
@@ -268,7 +268,7 @@ function ProductDetails({ open, close, data }) {
                       </svg>
                     ))}
                   </div>
-                  <p className="text-base font-normal leading-7 text-gray-700 mb-5">
+                  <p className="text-base font-normal leading-7 text-gray-700 dark:text-white mb-5">
                     {data?.short_description}
                   </p>
                   {/* <p className="mt-5 text-base font-normal leading-7 text-gray-700">
@@ -279,7 +279,7 @@ function ProductDetails({ open, close, data }) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {attributes?.map((section) => (
                       <div key={section.name} className="mt-3 mr-10">
-                        <label className="block text-lg font-bold text-gray-700">
+                        <label className="block text-lg font-bold text-gray-700 dark:text-white">
                           {section.name}
                         </label>
                         <div className="mt-1">
@@ -291,7 +291,7 @@ function ProductDetails({ open, close, data }) {
                             onChange={(e) =>
                               handleOptionChange(section.name, e.target.value)
                             }
-                            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="block w-full text-black p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                           >
                             {section.options.map((option) => (
                               <option key={option} value={option}>
@@ -309,14 +309,14 @@ function ProductDetails({ open, close, data }) {
                       {/* <p className="text-3xl font-bold line-through text-gray-300 mr-3">
                         &#8377;{data?.regular_price}
                       </p> */}
-                      <p className="text-3xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold text-gray-900 dark:text-white">
                         &#8377;{currentPrice || 0}
                       </p>
                     </div>
                     <div className="ml-0 md:ml-10 flex items-center mb-5 md:mb-0">
                       <label
                         htmlFor="quantity"
-                        className="block text-lg font-bold text-gray-700"
+                        className="block text-lg font-bold text-gray-700 dark:text-white"
                       >
                         Quantity :&nbsp;
                       </label>
@@ -326,7 +326,7 @@ function ProductDetails({ open, close, data }) {
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
                         defaultValue="1"
-                        className="mt-1 block w-30 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-md rounded-md"
+                        className="mt-1 block w-30 pl-3 pr-10 py-2 text-base text-black border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-md rounded-md"
                       >
                         {[...Array(5).keys()].map((i) => (
                           <option key={i + 1} value={i + 1}>

@@ -13,29 +13,7 @@ const authAxiosInstance = axios.create({
   baseURL: AUTH_URL,
 });
 
-// Axios instance without interceptors for token verification
-const tokenVerificationAxiosInstance = axios.create({
-  baseURL: AUTH_URL,
-});
 
-const verifyToken = async (token) => {
-  try {
-    const response = await tokenVerificationAxiosInstance.get("/verify-token", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (err) {
-    console.error(
-      "Token verification failed:",
-      err.response?.data || err.message
-    );
-    return { error: err.response?.data || err.message };
-  }
-};
-
-// Request interceptor for apiAxiosInstance
 apiAxiosInstance.interceptors.request.use(
   async (config) => {
     const token =
@@ -63,6 +41,7 @@ apiAxiosInstance.interceptors.response.use(
     if (response && response.status === 401) {
       localStorage.removeItem("token");
       alert("Session expired or invalid token. Please log in again.");
+      return;
     }
     return Promise.reject(error);
   }
@@ -74,7 +53,7 @@ authAxiosInstance.interceptors.request.use(
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-    if (config.url.includes("/signin") || config.url.includes("/signup")) {
+    if (config.url.includes("/signin") || config.url.includes("/signup") || config.url.includes("/categories")) {
       return config;
     }
 
@@ -101,6 +80,7 @@ authAxiosInstance.interceptors.response.use(
     if (response && response.status === 401) {
       localStorage.removeItem("token");
       alert("Session expired or invalid token. Please log in again.");
+      return;
     }
     return Promise.reject(error);
   }

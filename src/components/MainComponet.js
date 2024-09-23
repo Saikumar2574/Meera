@@ -1,15 +1,10 @@
+"use client";
 import { ThemeProvider } from "next-themes";
-import React from "react";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import HomePage from "./Home";
-import Footer from "./Footer";
+import React, { Suspense } from "react";
+import { Provider } from "react-redux";
+import { store } from "@/lib/redux/store";
 
-function MainComponet({ children }) {
-//  const router = useRouter()
-
- 
-
+function MainComponent({ children }) {
   return (
     <ThemeProvider
       attribute="class"
@@ -17,20 +12,24 @@ function MainComponet({ children }) {
       enableSystem
       disableTransitionOnChange
     >
-      <div className="h-full flex flex-col overflow-hidden">
-        <Header />
-        <div className="flex flex-1 overflow-hidden w-full  ">
-          <aside className="hidden lg:block w-20 bg-transparent z-40">
-            {/* Sidebar Component */}
-            <Sidebar />
-          </aside>
-          {children}
-          {/* <HomePage /> */}
-          <Footer/>
+      <Provider store={store}>
+        <div className="h-screen flex flex-col overflow-hidden">
+          <main className="flex-1 flex flex-col overflow-hidden relative">
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-full">
+                  Loading...
+                </div>
+              }
+            >
+              {children}
+            </Suspense>
+          </main>
+          {/* You might have a footer or other elements that need styling here */}
         </div>
-      </div>
+      </Provider>
     </ThemeProvider>
   );
 }
 
-export default MainComponet;
+export default MainComponent;

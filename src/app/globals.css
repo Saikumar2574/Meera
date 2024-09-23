@@ -68,7 +68,8 @@
   }
 }
 /* Ensure the viewport height is accurate */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -124,40 +125,39 @@ body {
   }
 }
 @keyframes wave-animation {
-  0%, 100% {
-      transform: scaleY(0.3);
+  0%,
+  100% {
+    transform: scaleY(0.3);
   }
   50% {
-      transform: scaleY(1);
+    transform: scaleY(1);
   }
 }
 .animate-timer {
   animation: timer linear forwards;
 }
 
-
 /* Hide scrollbar for Firefox */
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #000000; 
+  background: #000000;
   cursor: pointer;
   position: relative;
   z-index: 1;
 }
 
-
 .slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #000000; 
+  background: #000000;
   cursor: pointer;
 }
 
@@ -165,7 +165,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #000000; 
+  background: #000000;
   cursor: pointer;
 }
 
@@ -394,5 +394,125 @@ body {
   z-index: 10;
   font-size: 24px;
   color: #777;
+}
+
+
+.markdown {
+  line-height: 1.6;
+  color: #333;
+  padding: 20px;
+}
+
+/* Headings */
+.markdown p strong {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #000;
+}
+
+/* Ordered Lists */
+.markdown ol {
+  list-style: decimal inside;
+  margin-left: 20px;
+}
+
+.markdown ol li {
+  margin-top: 10px;
+}
+
+/* Unordered Lists */
+.markdown ul {
+  list-style: disc inside;
+  margin-left: 20px;
+}
+
+.markdown ul li {
+  margin-top: 5px;
+}
+
+/* Ensure the table is scrollable horizontally on mobile devices */
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block; /* Makes the table block-level to enable scrolling */
+}
+
+.markdown th, .markdown td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-weight: 600;
+  padding-left: 20px;
+}
+
+.markdown th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.markdown tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.markdown tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Price Styling */
+.markdown td:contains('₹') {
+  font-weight: bold;
+  color: #28a745;
+}
+
+
+/* Recommendations Section */
+.markdown .recommendation {
+  margin-top: 20px;
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-left: 4px solid #007bff;
+}
+
+.markdown .recommendation strong {
+  font-size: 1.2rem;
+}
+
+.markdown .recommendation p {
+  margin-top: 10px;
+}
+
+/* Question Section */
+.markdown .questions {
+  margin-top: 20px;
+  background-color: #fff3cd;
+  padding: 15px;
+  border-left: 4px solid #ffecb5;
+}
+
+.markdown .questions p {
+  margin-top: 10px;
+}
+
+/* Product Specifications */
+.markdown .specifications {
+  margin-top: 20px;
+}
+
+.markdown .specifications ul {
+  padding-left: 0;
+}
+
+.markdown .specifications ul li {
+  margin-top: 5px;
+}
+
+/* Strong Styling */
+.markdown p strong {
+  font-size: 1.2rem;
+  color: #333;
 }
 

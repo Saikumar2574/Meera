@@ -1,16 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { PlaceholdersAndVanishTextarea } from "./ui/placeholders-and-vanish-input";
-import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImMic } from "react-icons/im";
 import { FaStopCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 function Footer() {
-
   const router = useRouter();
+  const pathname = usePathname();
   const [searchText, setSearchText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState(null);
@@ -18,6 +23,7 @@ function Footer() {
   const [action, setAction] = useState(null);
   const scale = useMotionValue(1);
   const transformScale = useTransform(scale, [0, 1], [0.8, 1.2]);
+
   const placeholders1 = [
     "Show me riding jackets, pants and gloves",
     "show me maintenance products for my bike",
@@ -133,58 +139,34 @@ function Footer() {
     setSearchText(e.target.value);
   };
 
-
   const onSubmit = (value) => {
-    // value == "show me helmets"
-    router.push(`/search?prompt=${value}`)
+    setSearchText("")
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Session expired or invalid token. Please log in again.");
+      return;
+    }
+    if (pathname == "/" || pathname == "/search/") {
+      router.push(`/search?prompt=${value}`);
+    } else if (pathname.startsWith("/search/products")) {
+      router.push(`/search/products/query?msg=${value}`);
+    }
   };
 
   return (
-    <div className="w-full fixed bottom-0" style={{ zIndex: 10 }}>
+    <div className="w-full sticky bottom-0" style={{ zIndex: 10 }}>
       <div
         className="hidden md:block relative"
         style={{
-          border: "1px solid rgb(108 108 108 / 30%)",
-          boxShadow: " 0 8px 32px rgba(0, 0, 0, 0.25)",
-          background:
-            "linear-gradient(to bottom, rgba(200, 200, 200, 0.2), rgba(255, 255, 255, 0.2))",
+        //   border: "1px solid rgb(108 108 108 / 30%)",
+        //   boxShadow: " 0 8px 32px rgba(0, 0, 0, 0.25)",
+        //   background:
+        //     "linear-gradient(to bottom, rgba(200, 200, 200, 0.2), rgba(255, 255, 255, 0.2))",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: " blur(20px)",
           paddingBottom: "0.75rem",
         }}
       >
-        {/* {selectedItems.length > 0 && (
-              <div className="flex relative w-full max-w-4xl mx-auto -mb-2 pt-3">
-                <AnimatePresence>
-                  {selectedItems.map((item, index) => (
-                    <motion.span
-                      key={item.id || item.product_id}
-                      initial={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.5 }}
-                      transition={{ duration: 0.3 }}
-                      className="py-1 px-2 bg-black text-white rounded-md ml-2 max-w-52 flex items-center space-x-2 overflow-ellipsis overflow-hidden whitespace-nowrap"
-                    >
-                      <span className="overflow-hidden overflow-ellipsis whitespace-nowrap w-[90%]">
-                        {item.name}
-                      </span>
-                      <AiOutlineClose
-                        size={20}
-                        className="ml-2 cursor-pointer"
-                        onClick={() =>
-                          handleRemoveItem(item?.productId || item?.product_id)
-                        }
-                      />
-                    </motion.span>
-                  ))}
-                </AnimatePresence>
-              </div>
-            )} */}
-
-        {/* {model === null && action && (
-              <div className="flex relative w-full max-w-2xl mx-auto -mb-2 pt-3">
-                <p className="text-xl font-semibold italic">{action}</p>
-              </div>
-            )} */}
 
         <PlaceholdersAndVanishTextarea
           value={searchText}
