@@ -104,7 +104,7 @@ function Page() {
                   >
                     <div className="flex p-4 border rounded-lg shadow-lg bg-white">
                       <Image
-                        src={card?.images[0]?.src}
+                        src={card?.image}
                         width={100}
                         height={100}
                         alt={card?.name || "Product Image"}

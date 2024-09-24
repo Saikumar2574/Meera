@@ -154,10 +154,7 @@ function Footer() {
   };
 
   return (
-    <div className="w-full sticky bottom-0" style={{ zIndex: 10 }}>
-      <div
-        className="hidden md:block relative"
-        style={{
+    <div className="w-full sticky bottom-0 bg-[#ffffff50]"  style={{
         //   border: "1px solid rgb(108 108 108 / 30%)",
         //   boxShadow: " 0 8px 32px rgba(0, 0, 0, 0.25)",
         //   background:
@@ -165,7 +162,11 @@ function Footer() {
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: " blur(20px)",
           paddingBottom: "0.75rem",
-        }}
+          zIndex:10
+        }}>
+      <div
+        className="hidden md:block relative px-20"
+       
       >
 
         <PlaceholdersAndVanishTextarea

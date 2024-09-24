@@ -19,7 +19,7 @@ import { ModeToggle } from "./ScreenMode";
 import { useRouter } from "next/navigation";
 
 export function Header({ reset, setOpenModal }) {
-  const router = useRouter()
+  const router = useRouter();
   const [showAuth, setShowAuth] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -81,24 +81,20 @@ export function Header({ reset, setOpenModal }) {
         </Link>
         <div className="hidden md:block ">
           <div className="flex items-center gap-10">
-          <ModeToggle/>
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="  flex text-black hover:text-gray-600  font-semibold text-lg   rounded-full md:rounded-full"
-            >
-              <MdLogout size={26} />
-              <span className="hidden md:inline ml-3">Logout</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowAuth(true)}
-              className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
-            >
-              <MdPerson size={26} />
-              <span className="hidden md:inline ml-3">Login</span>
-            </button>
-          )}
+            <ModeToggle />
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="rounded-full">
+                <img src="/avatar.png" className="w-14 h-14" alt="Shop Logo" />
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowAuth(true)}
+                className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
+              >
+                <MdPerson size={26} />
+                <span className="hidden md:inline ml-3">Login</span>
+              </button>
+            )}
           </div>
         </div>
         <button

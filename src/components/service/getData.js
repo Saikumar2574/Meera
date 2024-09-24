@@ -19,10 +19,13 @@ export const getData = async (msg) => {
   }
 };
 
-export const retriveProducts = async (data) => {
+export const retriveProducts = async (page, data) => {
   // const token = getToken();
   try {
-    const response = await apiAxiosInstance.post(`/retrieve`, data);
+    const response = await authAxiosInstance.post(
+      `/products/search/relevance?page=${page}&page_size=20`,
+      data
+    );
     return response.data;
   } catch (err) {
     console.error("Request failed:", err.response?.data || err.message);

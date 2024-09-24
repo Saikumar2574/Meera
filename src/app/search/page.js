@@ -38,14 +38,14 @@ function Page() {
 
   return (
     <>
-     <Header/>
+     {/* <Header/> */}
       <div className="flex items-center justify-center h-full w-full relative overflow-y-auto">
         <div className="max-w-[1200px] w-full h-full p-6 relative">
-          {loading && (
+          {/* {loading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <Spinner aria-label="Extra large spinner example" size="xl" />
             </div>
-          )}
+          )} */}
           <Understanding data={initialData} prompt={prompt} />
           {initialData?.irrelevant_context && (
             <div className="mt-14">
@@ -65,7 +65,7 @@ function Page() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

@@ -223,7 +223,7 @@ export function PlaceholdersAndVanishTextarea({
     <div className="w-full flex items-center justify-center">
       <div className="relative flex w-full max-w-[1200px] items-center  pt-3">
         <form
-          className={cn("w-full relative flex ml-20")}
+          className={cn("w-full relative flex")}
           style={{
             background: "#f5f5f7",
             borderRadius: "15px",
@@ -231,17 +231,17 @@ export function PlaceholdersAndVanishTextarea({
           }}
           onSubmit={handleSubmit}
         >
-          <canvas
+          {/* <canvas
             className={cn(
               "absolute pointer-events-none text-base transform scale-50 top-[20%] left-5 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
               !animating ? "opacity-0" : "opacity-100"
             )}
             ref={canvasRef}
-          />
+          /> */}
           <div className="relative w-full">
-            {!isFocused && (
+            {/* {!isFocused && (
               <span className="absolute top-4 left-10 h-6 w-1 bg-black animate-blink"></span>
-            )}
+            )} */}
             <textarea
               onChange={(e) => {
                 if (!animating) {
@@ -262,7 +262,7 @@ export function PlaceholdersAndVanishTextarea({
                 if (!value) e.target.rows = 1;
               }}
               className={cn(
-                "ml-4 w-full pt-4 relative text-xl z-10 border-none dark:text-black bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
+                "ml-4 w-full mt-2 py-0  relative text-xl z-10 border-none dark:text-black bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4  pr-20",
                 "overflow-y-auto",
                 "max-h-40",
                 "transition-all duration-500 ease-in-out",
@@ -270,16 +270,16 @@ export function PlaceholdersAndVanishTextarea({
                 animating && "text-transparent dark:text-transparent"
               )}
               style={{
-                height: isFocused ? "136px" : "53px",
+                height: isFocused ? "136px" : "30px",
                 outline: "none",
               }}
             />
           </div>
-          <div className="w-20 flex items-end justify-center">
+          <div className="w-12 flex items-end justify-center">
             <button
               disabled={!value || isRecording}
               type="submit"
-              className="z-10 mb-[14px]  h-8 w-8 rounded-md bg-gray-900  dark:text-white text-gray-100 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
+              className="z-10 mb-[6px]  h-8 w-8 rounded-md bg-gray-900  dark:text-white text-gray-100 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
             >
               <AiOutlineEnter size={18} />
             </button>
@@ -360,7 +360,8 @@ export function PlaceholdersAndVanishTextarea({
           </div>
         )}
         {/* Placeholder display */}
-        <div className="absolute mt-11 top-0 left-36 transform -translate-y-1/2 flex">
+       { !isFocused && 
+        <div className="absolute mt-9 top-0 left-12 transform -translate-y-1/2 flex">
           <AnimatePresence mode="wait">
             {!value && (
               <motion.span
@@ -374,7 +375,7 @@ export function PlaceholdersAndVanishTextarea({
               </motion.span>
             )}
           </AnimatePresence>
-        </div>
+        </div>}
       </div>
     </div>
   );

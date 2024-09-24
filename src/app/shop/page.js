@@ -40,7 +40,7 @@ const ParentCategoriesPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-20">
+    <div>
       <h2 className="mb-10 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6 md:leading-[55px]">
         Popular Categories
       </h2>

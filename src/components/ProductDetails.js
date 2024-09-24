@@ -127,7 +127,7 @@ function ProductDetails({ open, close, data }) {
       size="full"
       theme={{
         content: {
-          base: "relative  h-full md:h-[90%]",
+          base: "relative md:max-h-[90%] ",
           inner:
             "relative flex max-h-full flex-col bg-[#edf1f8] shadow dark:bg-gray-700 h-full rounded-none md:rounded-lg",
         },
@@ -138,12 +138,12 @@ function ProductDetails({ open, close, data }) {
       <Modal.Header
         theme={{
           close: {
-            base: "ml-auto inline-flex items-center rounded-lg  p-1.5 text-sm text-gray-400 bg-black hover:text-white dark:hover:bg-gray-600 dark:hover:text-white",
+            base: "ml-auto  inline-flex items-center rounded-lg  p-1.5 text-sm text-gray-400 bg-black hover:text-white dark:hover:bg-gray-600 dark:hover:text-white",
           },
         }}
       />
       <Modal.Body>
-        <section className=" h-full flex justify-center items-center p-0 md:p-5 pb-28">
+        <section className=" h-full  flex justify-center items-center p-0 md:p-5 pb-28">
           <div class="mx-auto max-w-7xl h-full">
             <div className="relative">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-10 xl:gap-x-20">

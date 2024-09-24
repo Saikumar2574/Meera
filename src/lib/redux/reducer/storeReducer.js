@@ -118,7 +118,7 @@ const categoriesSlice = createSlice({
       if (!Array.isArray(state.products)) {
         state.products = [];
       }
-      state.products = [...state.products, ...products];
+      state.products = products;
       state.hasMore = pagination.current_page < pagination.total_pages;
     //   state.currentPage = pagination.current_page + 1;
     });
