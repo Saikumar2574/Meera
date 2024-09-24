@@ -306,7 +306,7 @@ function Page() {
     <div className="flex h-full w-full relative">
       {/* <CategorySidebar onCategorySelect={handleCategorySelect} /> */}
     
-        <ExploreStore />{" "}
+        <ExploreStore data={{}} />{" "}
         {/* Assuming ExploreStore displays products */}
      
     </div>
