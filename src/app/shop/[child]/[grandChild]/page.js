@@ -53,7 +53,7 @@ function page(props) {
 
   return (
     <section>
-      <h2 className="mb-10 text-xl font-bold sm:text-[40px] italic capitalize dark:text-white text-black leading-6 md:leading-[55px]">
+      <h2 className="mb-10 text-4xl font-bold italic capitalize dark:text-white text-black leading-6 md:leading-[55px]">
         {selectedChild && selectedChild.name}
       </h2>
       <div className="flex flex-wrap gap-8">

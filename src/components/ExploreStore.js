@@ -60,7 +60,7 @@ function ExploreStore({ data }) {
               >
                 {(provided) => (
                   <div
-                    className="flex flex-col w-[280px] h-[440px] overflow-hidden bg-white rounded-md transition-all duration-700 hover:scale-105 hover:shadow-2xl"
+                    className="flex flex-col w-[280px] h-[440px] overflow-hidden bg-white rounded-md transition-all duration-700 "
                     ref={provided.innerRef}
                     onClick={(e) => fetchProductDetails(e, product.id)}
                     {...provided.draggableProps}

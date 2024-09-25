@@ -59,7 +59,7 @@ const ProductsPage = () => {
 
   return (
     <section>
-      <h2 className=" text-xl font-bold sm:text-[40px] italic capitalize dark:text-white text-black leading-6 md:leading-[55px]">
+      <h2 className=" text-4xl font-bold italic capitalize dark:text-white text-black leading-6 md:leading-[55px]">
         {selectedGrandChild?.name}
       </h2>
 

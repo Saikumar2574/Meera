@@ -14,12 +14,12 @@ function layout({ children }) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col ml-16">
         {/* Sticky Header */}
-        <header className="sticky top-0 z-50">
+        {/* <header className="sticky top-0 z-50">
           <Header />
-        </header>
+        </header> */}
 
         {/* Main Section with Overflow */}
-        <main className="flex-1 overflow-auto relative py-10">
+        <main className="flex-1 overflow-auto relative">
           <Suspense
             fallback={
               <div className="flex justify-center items-center h-full">
@@ -32,9 +32,9 @@ function layout({ children }) {
         </main>
 
         {/* Sticky Footer */}
-        <footer className="sticky bottom-0 z-50">
+        {/* <footer className="sticky bottom-0 z-50">
           <Footer />
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

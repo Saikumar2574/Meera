@@ -41,7 +41,7 @@ const ParentCategoriesPage = () => {
 
   return (
     <div>
-      <h2 className="mb-10 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6 md:leading-[55px]">
+      <h2 className="mb-10 text-4xl font-bold italic dark:text-white text-black leading-6 md:leading-[55px]">
         Popular Categories
       </h2>
       <div className="grid grid-cols-5 gap-10">

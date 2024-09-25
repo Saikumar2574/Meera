@@ -368,7 +368,7 @@ function ExploreStore() {
                                 />
                               </button>
 
-                              <span className="ml-4 font-bold text-[12px] md:text-base">
+                              <span className="ml-4 font-bold text-xs md:text-base">
                                 A2B7
                               </span>
 
@@ -409,7 +409,7 @@ function ExploreStore() {
                               </div>
                             </div>
                             <h3
-                              className={`text-[12px] md:text-[16px] capitalize font-bold text-gray-900 mt-2 flex-1 transition-all duration-200 overflow-hidden text-ellipsis`}
+                              className={`text-xs md:text-base capitalize font-bold text-gray-900 mt-2 flex-1 transition-all duration-200 overflow-hidden text-ellipsis`}
                               style={{
                                 display: "-webkit-box",
                                 WebkitLineClamp: 2,
@@ -423,7 +423,7 @@ function ExploreStore() {
 
                             <div className="flex items-center  flex-shrink-0 my-1  md:my-2">
                               <p
-                                className={`text-[12px] md:text-lg font-semibold text-gray-500 italic`}
+                                className={`text-xs md:text-lg font-semibold text-gray-500 italic`}
                               >
                                 Price : &#8377; {product?.price}
                               </p>
@@ -472,7 +472,7 @@ function ExploreStore() {
                             <div className=" flex items-center justify-between">
                               <button
                                 type="button"
-                                className="inline-flex items-center justify-center py-1 px-2 text-[12px]  font-bold text-white bg-black rounded-md "
+                                className="inline-flex items-center justify-center py-1 px-2 text-xs  font-bold text-white bg-black rounded-md "
                               >
                                 <IoBag className="w-4 h-4 mr-1" />{" "}
                                 {/* Adjusted icon size and added spacing */}

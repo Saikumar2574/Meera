@@ -19,6 +19,17 @@ export const getData = async (msg) => {
   }
 };
 
+export const recommendedProducts = async (data) => {
+  // const token = getToken();
+  try {
+    const response = await authAxiosInstance.post(`/products/recommendations`, data);
+    return response.data;
+  } catch (err) {
+    console.error("Request failed:", err.response?.data || err.message);
+    return { error: err.response?.data || err.message };
+  }
+};
+
 export const retriveProducts = async (page, data) => {
   // const token = getToken();
   try {

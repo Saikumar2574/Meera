@@ -12,6 +12,7 @@ import { ImMic } from "react-icons/im";
 import { FaStopCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { usePathname, useRouter } from "next/navigation";
+import { getData } from "./service/getData";
 
 function Footer() {
   const router = useRouter();
@@ -139,8 +140,36 @@ function Footer() {
     setSearchText(e.target.value);
   };
 
+  const fetchShopQuery = async (value) => {
+    try {
+      const data = await getData(value);
+      if (data && data?.category_lists) {
+        if (data?.category_lists?.length > 1) {
+          router.push(`/search?prompt=${value}`);
+        } else {
+          const state = {
+            product: data?.category_lists?.[0]?.product,
+            parent_category: data?.category_lists?.[0]?.parent_category,
+            child_category: data?.category_lists?.[0]?.child_category,
+            grand_child_category:
+              data?.category_lists?.[0]?.grand_child_category,
+            overal_budget: data.price || {},
+            related_price: data?.category_lists?.[0]?.price || {},
+            attributes: data?.category_lists?.[0]?.attributes || [],
+            search_phrase: data?.category_lists?.[0]?.search_phrase,
+          };
+          const encodedState = encodeURIComponent(JSON.stringify(state));
+          router.push(`/search/products?query=${encodedState}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+    }
+  };
+
   const onSubmit = (value) => {
-    setSearchText("")
+    setSearchText("");
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Session expired or invalid token. Please log in again.");
@@ -150,25 +179,26 @@ function Footer() {
       router.push(`/search?prompt=${value}`);
     } else if (pathname.startsWith("/search/products")) {
       router.push(`/search/products/query?msg=${value}`);
+    } else if (pathname.startsWith("/shop")) {
+      fetchShopQuery(value);
     }
   };
 
   return (
-    <div className="w-full sticky bottom-0 bg-[#ffffff50]"  style={{
+    <div
+      className="w-full sticky bottom-0 bg-[#ffffff50]"
+      style={{
         //   border: "1px solid rgb(108 108 108 / 30%)",
         //   boxShadow: " 0 8px 32px rgba(0, 0, 0, 0.25)",
         //   background:
         //     "linear-gradient(to bottom, rgba(200, 200, 200, 0.2), rgba(255, 255, 255, 0.2))",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: " blur(20px)",
-          paddingBottom: "0.75rem",
-          zIndex:10
-        }}>
-      <div
-        className="hidden md:block relative px-20"
-       
-      >
-
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: " blur(20px)",
+        paddingBottom: "0.75rem",
+        zIndex: 10,
+      }}
+    >
+      <div className="hidden md:block relative px-20">
         <PlaceholdersAndVanishTextarea
           value={searchText}
           setValue={setSearchText}

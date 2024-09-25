@@ -18,7 +18,7 @@ export const fetchProducts = createAsyncThunk(
   async ({ categoryId, page = 1 }, { getState }) => {
     const { products } = getState().shop;
     const response = await axios.get(
-      `https://7a3fd2dhfc.execute-api.ap-south-1.amazonaws.com/dev/categories?category_id=${categoryId}&category_type=products&page=${page}&per_page=12`
+      `https://7a3fd2dhfc.execute-api.ap-south-1.amazonaws.com/dev/categories?category_id=${categoryId}&category_type=products&page=${page}&per_page=15`
     );
     return {
       products: response.data.products,
