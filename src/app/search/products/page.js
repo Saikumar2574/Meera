@@ -19,6 +19,7 @@ function Page() {
   const [totalPages, setTotalPages] = useState(1);
   const query = useSearchParams();
   const [isFullList, setIsFullList] = useState(false);
+  const [recommendedLoading, setRecommendedLoading] = useState(false);
 
   // Function to toggle between "Render List" and "Full List"
   const toggleList = () => {
@@ -75,11 +76,14 @@ function Page() {
   };
 
   const getRecommendedProducts = async (data) => {
+    setRecommendedLoading(true);
     try {
       const res = await recommendedProducts(data);
       setRecomendedProducts(res?.data);
     } catch (error) {
       console.error("Error fetching recommended products:", error);
+    } finally {
+      setRecommendedLoading(false);
     }
   };
 
@@ -136,6 +140,7 @@ function Page() {
             products={products}
             recomendedProducts={recomendedProducts}
             loading={loading}
+            recommendedLoading={recommendedLoading}
           />
           {/* Add Pagination Component */}
           {isFullList && (

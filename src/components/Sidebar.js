@@ -20,6 +20,7 @@ import { FaCirclePlus ,FaPlus } from "react-icons/fa6";
 import { IoStorefrontOutline } from "react-icons/io5";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { BsChatSquareText } from "react-icons/bs";
 
 const Sidebar = ({ component, setComponent, setIsSearch, setModel }) => {
   const route = useRouter();
@@ -158,12 +159,12 @@ const Sidebar = ({ component, setComponent, setIsSearch, setModel }) => {
         </Tooltip>
       </div>
       <div>
-        <Tooltip content="Search" placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
+        <Tooltip content={<>All&nbsp;Conversations</>} placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
           <button
             className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md  transition-colors group"
             onClick={fetchHistory}
           >
-            <HiOutlineSearch
+            <BsChatSquareText
               size={22}
               className={`${
                 component === "search"

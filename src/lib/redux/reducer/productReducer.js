@@ -9,6 +9,7 @@ const productSelectionSlice = createSlice({
   initialState,
   reducers: {
     setSelectedIds: (state, action) => {
+        debugger
       state.selectedIds = action.payload;
     },
   },

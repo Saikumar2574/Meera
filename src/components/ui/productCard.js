@@ -13,7 +13,6 @@ import { BorderBeam } from "../magicui/border-beam";
 import ShineBorder from "../magicui/shine-border";
 function ProductCard({ product, pinnedProducts, togglePin }) {
   const [isOpen, setIsOpen] = useState("");
-  debugger;
   const toggleMenu = (productId) => {
     setIsOpen(isOpen === productId ? "" : productId); // Toggle the menu for a specific product
   };
@@ -35,13 +34,24 @@ function ProductCard({ product, pinnedProducts, togglePin }) {
     },
   };
   return (
-    <ShineBorder
-      className={"relative p-5 group  rounded-lg border border-gray-200"}
-      hide={pinnedProducts?.some((prevCard) =>
-        product?.productId
-          ? prevCard?.productId === product?.productId
-          : prevCard?.id === product?.id
-      )}
+    <div
+      className={`relative p-5 group d-no rounded-lg 
+        ${
+          pinnedProducts?.some((prevCard) =>
+            product?.productId
+              ? prevCard?.productId === product?.productId
+              : prevCard?.id === product?.id
+          )
+            ? "border-t-4 border border-t-blue-600"
+            : "border border-gray-200"
+        }
+      `}
+      //   className={"relative p-5 group  rounded-lg border border-gray-200"}
+      //   hide={pinnedProducts?.some((prevCard) =>
+      //       product?.productId
+      //         ? prevCard?.productId === product?.productId
+      //         : prevCard?.id === product?.id
+      //     )}
     >
       <div className="relative z-[1]">
         {/* className={`relative p-5 group d-no rounded-lg 
@@ -254,7 +264,7 @@ function ProductCard({ product, pinnedProducts, togglePin }) {
           </div>
         </div>
       </div>
-    </ShineBorder>
+    </div>
   );
 }
 

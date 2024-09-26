@@ -6,17 +6,29 @@ import Link from "next/link";
 import { MdOutlineAddCircle, MdPushPin } from "react-icons/md";
 import { FiChevronDown } from "react-icons/fi";
 import { BsChatSquareTextFill } from "react-icons/bs";
-import { RiChat1Line } from "react-icons/ri";
+import { RiChat1Line, RiDeleteBinLine } from "react-icons/ri";
 import { FaRectangleList } from "react-icons/fa6";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
 
-function layout({children}) {
+function layout({ children }) {
+  const dispatch = useDispatch();
   const [dragStarted, setDragStarted] = useState(false);
   const [shortListItems, setShortListItems] = useState([]);
   const [isPinnedOpen, setIsPinnedOpen] = useState(true);
   const [isConversationsOpen, setIsConversationsOpen] = useState(true);
   const [isShortListedOpen, setIsShortListedOpen] = useState(true);
+  const pinnedItems = useSelector((state) => state.products.selectedIds);
+
+  const [openSection, setOpenSection] = useState("");
+
+  // Function to toggle sections
+  const toggleSection = (section) => {
+    setOpenSection((prev) => (prev === section ? "" : section)); // Close if same section clicked again
+  };
   const handleDragEnd = (result) => {
     const { destination, source } = result;
     setDragStarted(false);
@@ -26,7 +38,14 @@ function layout({children}) {
       setShortListItems((prev) => [...prev, source.index]);
     }
   };
-
+  const handleRemovePinnedItem = (id) => {
+    const resetProsucts = pinnedItems.filter((item) => {
+      if (item?.productId) {
+        return item.productId !== id;
+      }
+    });
+    dispatch(setSelectedIds(resetProsucts));
+  };
   const rotateAnimation = {
     open: { rotate: 0 },
     closed: { rotate: 180 },
@@ -40,7 +59,7 @@ function layout({children}) {
         <motion.div
           className={`relative h-full transition-transform duration-300  w-[20%] xl:w-[25%] 4xl:w-[20%] overflow-hidden`}
         >
-          <div className="bg-[#f4f4f4] rounded-tr-[20px] h-full w-full rounded-br-[20px]  pb-4 pt-2 flex flex-col">
+          <div className="bg-[#fcfcfc] rounded-tr-[20px] h-full w-full rounded-br-[20px]  pb-4 pt-2 flex flex-col">
             <div className="px-8">
               <div className="flex justify-between items-center mb-6">
                 <Link href="/" prefetch={false}>
@@ -68,16 +87,16 @@ function layout({children}) {
               </div>
             </div>
             <div className="mt-auto pl-8 pr-1">
-              {/* Pinned Items Accordion */}
+              {/* Pinned Items Section */}
               <div>
                 <div
                   className="font-bold flex justify-between items-center cursor-pointer mr-6"
-                  onClick={() => setIsPinnedOpen(!isPinnedOpen)}
+                  onClick={() => toggleSection("pinned")}
                 >
                   <MdPushPin size={22} className="mr-2" />
                   Pinned Items
                   <motion.div
-                    animate={isPinnedOpen ? "open" : "closed"}
+                    animate={openSection === "pinned" ? "open" : "closed"}
                     variants={rotateAnimation}
                     className="ml-auto"
                   >
@@ -86,16 +105,54 @@ function layout({children}) {
                 </div>
                 <motion.div
                   initial={{ height: 0 }}
-                  animate={{ height: isPinnedOpen ? "auto" : 0 }}
+                  animate={{
+                    height: openSection === "pinned" ? "auto" : 0,
+                  }}
                   className="overflow-hidden"
                 >
-                  <div className="max-w-full mb-6">
-                    <div className="my-4 flex gap-4 overflow-x-auto hide-scrollbar">
-                      <div
-                        className={`rounded-md min-w-[60px] p-2 bg-gray-200 w-[60px] h-[60px] flex items-center justify-center border border-dashed border-black`}
-                      >
-                        <MdOutlineAddCircle size={28} />
-                      </div>
+                  <div className="max-w-full mb-6 mr-5">
+                    {/* Pinned Products */}
+                    <div
+                      className="my-4 flex flex-col gap-4 overflow-y-auto hide-scrollbar"
+                      style={{ maxHeight: "300px" }}
+                    >
+                      {pinnedItems && pinnedItems.length > 0 ? (
+                        pinnedItems.map((item) => (
+                          <div
+                            key={item.id}
+                            className="rounded-md group relative flex-shrink-0 flex w-full h-[80px] bg-gray-200 p-4 gap-2"
+                          >
+                            <Image
+                              width={60}
+                              height={60}
+                              className="rounded-md w-14 h-14"
+                              src={
+                                item.image ? item.image : item.images?.[0].src
+                              }
+                            />
+                            <div>
+                              <p className="text-sm font-semibold line-clamp-2 overflow-hidden text-ellipsis w-full">
+                                {item.name}
+                              </p>
+                              <p className="text-sm text-gray-400 italic font-semibold">
+                                &#8377;{item.price}
+                              </p>
+                            </div>
+                            <button
+                              className="hidden group-hover:block"
+                              onClick={() =>
+                                handleRemovePinnedItem(item.productId)
+                              }
+                            >
+                              <RiDeleteBinLine color="red" size={18} />
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500">
+                          No pinned products available.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -103,16 +160,18 @@ function layout({children}) {
 
               <hr className="w-[90%] h-[2px] bg-[#c6c6c6] my-4 border-none" />
 
-              {/* Conversations Accordion */}
+              {/* Conversations Section */}
               <div>
                 <div
-                  className="font-bold flex justify-between items-center cursor-pointer mr-6"
-                  onClick={() => setIsConversationsOpen(!isConversationsOpen)}
+                  className="font-bold flex  justify-between items-center cursor-pointer mr-6"
+                  onClick={() => toggleSection("conversations")}
                 >
                   <BsChatSquareTextFill size={22} className="mr-2" />
                   Conversations
                   <motion.div
-                    animate={isConversationsOpen ? "open" : "closed"}
+                    animate={
+                      openSection === "conversations" ? "open" : "closed"
+                    }
                     variants={rotateAnimation}
                     className="ml-auto"
                   >
@@ -121,21 +180,29 @@ function layout({children}) {
                 </div>
                 <motion.div
                   initial={{ height: 0 }}
-                  animate={{ height: isConversationsOpen ? "auto" : 0 }}
+                  animate={{
+                    height: openSection === "conversations" ? "auto" : 0,
+                  }}
                   className="overflow-hidden"
                 >
-                  <div className="my-4 flex gap-4 overflow-x-auto hide-scrollbar">
-                    <div className="rounded-xl bg-gray-200 p-4 min-w-[200px]">
-                      <RiChat1Line size={22} />
-                      <p className="font-semibold text-sm mt-3">
-                        You can select from board list of categories
-                      </p>
-                    </div>
-                    <div className="rounded-xl bg-gray-200 p-4 min-w-[200px]">
-                      <RiChat1Line size={22} />
-                      <p className="font-semibold text-sm mt-3">
-                        Another category option here
-                      </p>
+                  <div className="max-w-full mb-6 mr-5">
+                    {/* Conversations */}
+                    <div
+                      className="my-4 flex flex-col gap-4  overflow-y-auto hide-scrollbar"
+                      style={{ maxHeight: "300px" }}
+                    >
+                      <div className="rounded-xl relative group bg-gray-200 p-4 min-w-[200px]">
+                        <div className="flex justify-between items-center">
+                          <RiChat1Line size={22} />
+                          <button className="hidden group-hover:block">
+                            <RiDeleteBinLine color="red" size={18} />
+                          </button>
+                        </div>
+                        <p className="font-semibold text-sm mt-3">
+                          You can select from board list of categories
+                        </p>
+                      </div>
+                      {/* Add more static items as needed */}
                     </div>
                   </div>
                 </motion.div>
@@ -143,16 +210,16 @@ function layout({children}) {
 
               <hr className="w-[90%] h-[2px] bg-[#c6c6c6] my-4 border-none" />
 
-              {/* Shortlisted Items Accordion */}
+              {/* Shortlisted Items Section */}
               <div>
                 <div
                   className="font-bold flex justify-between items-center cursor-pointer mr-6"
-                  onClick={() => setIsShortListedOpen(!isShortListedOpen)}
+                  onClick={() => toggleSection("shortlisted")}
                 >
                   <FaRectangleList size={22} className="mr-2" />
                   Shortlisted Items
                   <motion.div
-                    animate={isShortListedOpen ? "open" : "closed"}
+                    animate={openSection === "shortlisted" ? "open" : "closed"}
                     variants={rotateAnimation}
                     className="ml-auto"
                   >
@@ -161,53 +228,78 @@ function layout({children}) {
                 </div>
                 <motion.div
                   initial={{ height: 0 }}
-                  animate={{ height: isShortListedOpen ? "auto" : 0 }}
+                  animate={{
+                    height: openSection === "shortlisted" ? "auto" : 0,
+                  }}
                   className="overflow-hidden"
                 >
                   <div
-                    className={`my-4 flex gap-4 overflow-x-auto hide-scrollbar`}
+                    className={`my-4 flex flex-col  gap-4  overflow-y-auto hide-scrollbar`}
+                    style={{ maxHeight: "300px" }}
                   >
                     {dragStarted && (
-                      <div
-                        style={{
-                          position: "fixed",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
-                          zIndex: 11,
-                        }}
-                      />
-                    )}
-                    <Droppable droppableId="dropedItems">
-                      {(provided) => (
+                      <>
                         <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          style={{ zIndex: 12 }}
-                        >
-                          <div
-                            className={`rounded-md min-w-[60px] p-2 bg-gray-200 w-[60px] h-[60px] flex items-center justify-center border border-dashed border-black ${
-                              dragStarted && "z-30 bg-[#fff]"
-                            }`}
-                          >
-                            <MdOutlineAddCircle size={28} />
-                          </div>
-                        </div>
-                      )}
-                    </Droppable>
+                          style={{
+                            position: "fixed",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
+                            zIndex: 11,
+                          }}
+                        />
+                      </>
+                    )}
+                    {/* <Droppable droppableId="dropedItems">
+                          {(provided) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                              style={{ zIndex: 12 }}
+                            >
+                              <div
+                                className={`rounded-md min-w-[60px] p-2 bg-gray-200 w-[60px] h-[60px] flex items-center justify-center border border-dashed border-black ${
+                                  dragStarted && "z-30 bg-[#fff] "
+                                }`}
+                              >
+                                <MdOutlineAddCircle size={28} />
+                              </div>
+                            </div>
+                          )}
+                        </Droppable> */}
+
                     {shortListItems.map((item) => (
                       <div
                         key={item.id}
-                        className="rounded-md min-w-[60px] bg-gray-200 w-[60px] h-[60px]"
+                        className="rounded-md group relative flex-shrink-0 flex w-full h-[80px] bg-gray-200 p-4 gap-2"
                       >
                         <Image
                           width={60}
                           height={60}
-                          className="rounded-md"
-                          src="https://gearnride.in/wp-content/uploads/2024/08/TAICHI-Riding-Jacket-Kompass-Air-Black-Grey-1.png"
+                          className="rounded-md w-14 h-14"
+                          src="https://gearnride.in/wp-content/uploads/2023/01/solace-rain-jacket-rain-pro-v2-2.jpg"
                         />
+                        <div>
+                          <p className="text-sm font-semibold line-clamp-2 overflow-hidden text-ellipsis w-full">
+                            {item.name}
+                          </p>
+                          <p className="text-sm text-gray-400 italic font-semibold">
+                            &#8377;{item.price}
+                          </p>
+                        </div>
+                        <button
+                          className="hidden group-hover:block"
+                          onClick={() => {
+                            const resetList = shortListItems.filter(
+                              (list) => list.id !== item.id
+                            );
+                            setShortListItems(resetList);
+                          }}
+                        >
+                          <RiDeleteBinLine color="red" size={18} />
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -218,16 +310,15 @@ function layout({children}) {
         </motion.div>
         <div className="flex-1 w-full flex flex-col transition-all duration-300 ">
           <main className=" ml-10 h-full overflow-y-auto lg:10 2xl:px-10">
-           
-              <Suspense
-                fallback={
-                  <div className="flex justify-center items-center h-full">
-                    <p>Loading...</p>
-                  </div>
-                }
-              >
-                {children}
-              </Suspense>
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-full">
+                  <p>Loading...</p>
+                </div>
+              }
+            >
+              {children}
+            </Suspense>
           </main>
           <Footer />
         </div>

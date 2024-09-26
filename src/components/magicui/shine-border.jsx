@@ -15,7 +15,7 @@ export default function ShineBorder({
   borderRadius = 8,
   borderWidth = 2,
   duration = 14,
-  color = "#9c40ff",
+  color = "green",
   className,
   children,
   hide,

@@ -78,8 +78,8 @@ function Page() {
   };
 
   return (
-    <div className="flex items-center justify-center h-full w-full relative overflow-y-auto">
-      <div className="max-w-[1200px] w-full h-full relative ">
+    <div className="flex items-center justify-center h-full w-full relative">
+      <div className="w-full h-full relative ">
         <section className="mt-6 pb-20">
           {/* <button
             onClick={() => router.back()}
@@ -88,13 +88,15 @@ function Page() {
             <FaArrowLeftLong size={24} />
             Back
           </button> */}
-          {!selectedItems?.length > 0 && <p className="text-red-600">No product selected.</p>}
-          {loading && (
+          {!selectedItems?.length > 0 && (
+            <p className="text-red-600">No product selected.</p>
+          )}
+          {/* {loading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <Spinner aria-label="Extra large spinner example" size="xl" />
             </div>
-          )}
-          {data?.message && selectedItems.length > 0 && (
+          )} */}
+          {/* {data?.message && selectedItems.length > 0 && (
             <Carousel opts={{ align: "start" }} className="w-full mt-4">
               <CarouselContent>
                 {selectedItems?.map((card, index) => (
@@ -112,16 +114,16 @@ function Page() {
                           e.target.src =
                             "https://dummyimage.com/300/09f/fff.png";
                         }}
-                        className="rounded-md w-[100px] h-[100px] md:w-[150px] md:h-[150px]"
+                        className="rounded-md w-[100px] h-[100px] md:w-[140px] md:h-[140px]"
                       />
                       <div className="ml-4 flex-1">
                         <h4
-                          className="font-semibold text-sm md:text-lg line-clamp-3 overflow-hidden overflow-ellipsis min-h-16 md:min-h-20"
+                          className="font-semibold text-sm line-clamp-2 overflow-hidden overflow-ellipsis min-h-10 "
                           dangerouslySetInnerHTML={{
                             __html: card.name,
                           }}
                         ></h4>
-                        <span className="block font-semibold text-sm md:text-lg mt-1 text-gray-400">
+                        <span className="block font-semibold text-sm mt-1 text-gray-400">
                           Price: &#8377;
                           {card.price}
                         </span>
@@ -149,10 +151,25 @@ function Page() {
               <CarouselPrevious />
               <CarouselNext />
             </Carousel>
-          )}
-          <h3 className="text-sm md:text-lg p-4 markdown">
-            <MarkdownRenderer markdown={data?.error || data?.message || data} />
-          </h3>
+          )} */}
+          <div>
+            <h6 className="w-fit px-4 py-2 bg-gray-100 rounded-xl">Q&nbsp;:-&nbsp;{msg}</h6>
+            <div className="flex gap-3 pt-4 items-center">
+              <video
+                src="/inputVedio.mp4"
+                autoPlay
+                loop
+                muted
+                className="w-8 h-8"
+              />
+              <p className="font-semibold italic">Meera...</p>
+            </div>
+            <p className="text-sm md:text-lg p-6 markdown">
+              <MarkdownRenderer
+                markdown={data?.error || data?.message || data}
+              />
+            </p>
+          </div>
           {data?.level === "info" && <InfoLevel content={data?.context} />}
         </section>
         {product && (

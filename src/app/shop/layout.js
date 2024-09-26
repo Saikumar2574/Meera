@@ -11,22 +11,31 @@ import {
   getHistory,
   getWhishlistDetails,
 } from "@/components/service/getData";
-import { MdOutlineAddCircle, MdOutlinePerson, MdPushPin } from "react-icons/md";
+import {
+  MdDelete,
+  MdOutlineAddCircle,
+  MdOutlinePerson,
+  MdPushPin,
+} from "react-icons/md";
 import { Drawer } from "flowbite-react";
 import Search from "@/components/Search";
 import Sidebar from "@/components/Sidebar";
 import { BsChatSquareTextFill } from "react-icons/bs";
-import { RiChat1Line } from "react-icons/ri";
+import { RiChat1Line, RiDeleteBinLine } from "react-icons/ri";
 import Image from "next/image";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { FaRectangleList, FaRegRectangleList } from "react-icons/fa6";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { IoFilterSharp } from "react-icons/io5";
 import { FiChevronDown } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
+import { useDispatch } from "react-redux";
 
 const ShopLayout = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
   const isSidebarOpen = true;
   const [breadcrumbArray, setBreadcrumbArray] = useState([]);
   const [openCart, setOpenCart] = useState(false);
@@ -39,9 +48,14 @@ const ShopLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Relevence");
   const dropdownRef = useRef(null); // Reference for the dropdown
-  const [isPinnedOpen, setIsPinnedOpen] = useState(true);
-  const [isConversationsOpen, setIsConversationsOpen] = useState(true);
-  const [isShortListedOpen, setIsShortListedOpen] = useState(true);
+  const pinnedProducts = useSelector((state) => state.products?.selectedIds);
+
+  const [openSection, setOpenSection] = useState("");
+
+  // Function to toggle sections
+  const toggleSection = (section) => {
+    setOpenSection((prev) => (prev === section ? "" : section)); // Close if same section clicked again
+  };
   const toggleDropdown = () => setIsOpen((prev) => !prev);
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -126,12 +140,22 @@ const ShopLayout = ({ children }) => {
 
   const handleDragEnd = (result) => {
     const { destination, source } = result;
+    debugger;
     setDragStarted(false);
     if (!destination) return;
     if (destination.droppableId === "dropedItems") {
       if (shortListItems.some((item) => item.id === source.index.id)) return;
       setShortListItems((prev) => [...prev, source.index]);
     }
+  };
+
+  const handleRemovePinnedItem = (id) => {
+    const resetProsucts = pinnedProducts.filter((item) => {
+      if (item?.id) {
+        return item.id !== id;
+      }
+    });
+    dispatch(setSelectedIds(resetProsucts));
   };
 
   const rotateAnimation = {
@@ -180,153 +204,228 @@ const ShopLayout = ({ children }) => {
                   </p>
                 </div>
               </div>
-              <div className="mt-auto pl-8 pr-1">
-                {/* Pinned Items Accordion */}
-                <div>
-                  <div
-                    className="font-bold flex justify-between items-center cursor-pointer mr-6"
-                    onClick={() => setIsPinnedOpen(!isPinnedOpen)}
-                  >
-                    <MdPushPin size={22} className="mr-2" />
-                    Pinned Items
-                    <motion.div
-                      animate={isPinnedOpen ? "open" : "closed"}
-                      variants={rotateAnimation}
-                      className="ml-auto"
-                    >
-                      <FiChevronDown size={20} />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: isPinnedOpen ? "auto" : 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="max-w-full mb-6">
-                      <div className="my-4 flex gap-4 overflow-x-auto hide-scrollbar">
-                        <div
-                          className={`rounded-md min-w-[60px] p-2 bg-gray-200 w-[60px] h-[60px] flex items-center justify-center border border-dashed border-black`}
-                        >
-                          <MdOutlineAddCircle size={28} />
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-
-                <hr className="w-[90%] h-[2px] bg-[#c6c6c6] my-4 border-none" />
-
-                {/* Conversations Accordion */}
-                <div>
-                  <div
-                    className="font-bold flex justify-between items-center cursor-pointer mr-6"
-                    onClick={() => setIsConversationsOpen(!isConversationsOpen)}
-                  >
-                    <BsChatSquareTextFill size={22} className="mr-2"/>
-                    Conversations
-                    <motion.div
-                      animate={isConversationsOpen ? "open" : "closed"}
-                      variants={rotateAnimation}
-                      className="ml-auto"
-                    >
-                      <FiChevronDown size={20} />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: isConversationsOpen ? "auto" : 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="my-4 flex gap-4 overflow-x-auto hide-scrollbar">
-                      <div className="rounded-xl bg-gray-200 p-4 min-w-[200px]">
-                        <RiChat1Line size={22} />
-                        <p className="font-semibold text-sm mt-3">
-                          You can select from board list of categories
-                        </p>
-                      </div>
-                      <div className="rounded-xl bg-gray-200 p-4 min-w-[200px]">
-                        <RiChat1Line size={22} />
-                        <p className="font-semibold text-sm mt-3">
-                          Another category option here
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-
-                <hr className="w-[90%] h-[2px] bg-[#c6c6c6] my-4 border-none" />
-
-                {/* Shortlisted Items Accordion */}
-                <div>
-                  <div
-                    className="font-bold flex justify-between items-center cursor-pointer mr-6"
-                    onClick={() => setIsShortListedOpen(!isShortListedOpen)}
-                  >
-                    <FaRectangleList size={22} className="mr-2"/>
-                    Shortlisted Items
-                    <motion.div
-                      animate={isShortListedOpen ? "open" : "closed"}
-                      variants={rotateAnimation}
-                      className="ml-auto"
-                    >
-                      <FiChevronDown size={20} />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: isShortListedOpen ? "auto" : 0 }}
-                    className="overflow-hidden"
-                  >
+              {breadcrumbArray.some((item) => item.level === "grandchild") && (
+                <div className="mt-auto pl-8 pr-1">
+                  {/* Pinned Items Section */}
+                  <div>
                     <div
-                      className={`my-4 flex gap-4 overflow-x-auto hide-scrollbar`}
+                      className="font-bold flex justify-between items-center cursor-pointer mr-6"
+                      onClick={() => toggleSection("pinned")}
                     >
-                      {dragStarted && (
-                        <div
-                          style={{
-                            position: "fixed",
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
-                            zIndex: 11,
-                          }}
-                        />
-                      )}
-                      <Droppable droppableId="dropedItems">
-                        {(provided) => (
-                          <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                            style={{ zIndex: 12 }}
-                          >
-                            <div
-                              className={`rounded-md min-w-[60px] p-2 bg-gray-200 w-[60px] h-[60px] flex items-center justify-center border border-dashed border-black ${
-                                dragStarted && "z-30 bg-[#fff]"
-                              }`}
-                            >
-                              <MdOutlineAddCircle size={28} />
-                            </div>
-                          </div>
-                        )}
-                      </Droppable>
-                      {shortListItems.map((item) => (
-                        <div
-                          key={item.id}
-                          className="rounded-md min-w-[60px] bg-gray-200 w-[60px] h-[60px]"
-                        >
-                          <Image
-                            width={60}
-                            height={60}
-                            className="rounded-md"
-                            src="https://gearnride.in/wp-content/uploads/2024/08/TAICHI-Riding-Jacket-Kompass-Air-Black-Grey-1.png"
-                          />
-                        </div>
-                      ))}
+                      <MdPushPin size={22} className="mr-2" />
+                      Pinned Items
+                      <motion.div
+                        animate={openSection === "pinned" ? "open" : "closed"}
+                        variants={rotateAnimation}
+                        className="ml-auto"
+                      >
+                        <FiChevronDown size={20} />
+                      </motion.div>
                     </div>
-                  </motion.div>
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{
+                        height: openSection === "pinned" ? "auto" : 0,
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div className="max-w-full mb-6 mr-5">
+                        {/* Pinned Products */}
+                        <div
+                          className="my-4 flex flex-col gap-4 overflow-y-auto hide-scrollbar"
+                          style={{ maxHeight: "300px" }}
+                        >
+                          {pinnedProducts && pinnedProducts.length > 0 ? (
+                            pinnedProducts.map((item) => (
+                              <div
+                                key={item.id}
+                                className="rounded-md group relative flex-shrink-0 flex w-full h-[80px] bg-gray-200 p-4 gap-2"
+                              >
+                                <Image
+                                  width={60}
+                                  height={60}
+                                  className="rounded-md w-14 h-14"
+                                  src="https://gearnride.in/wp-content/uploads/2023/01/solace-rain-jacket-rain-pro-v2-2.jpg"
+                                />
+                                <div>
+                                  <p className="text-sm font-semibold line-clamp-2 overflow-hidden text-ellipsis w-full">
+                                    {item.name}
+                                  </p>
+                                  <p className="text-sm text-gray-400 italic font-semibold">
+                                    &#8377;{item.price}
+                                  </p>
+                                </div>
+                                <button
+                                  className="hidden group-hover:block"
+                                  onClick={() =>
+                                    handleRemovePinnedItem(item.id)
+                                  }
+                                >
+                                  <RiDeleteBinLine color="red" size={18} />
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-sm text-gray-500">
+                              No pinned products available.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  <hr className="w-[90%] h-[2px] bg-[#c6c6c6] my-4 border-none" />
+
+                  {/* Conversations Section */}
+                  <div>
+                    <div
+                      className="font-bold flex  justify-between items-center cursor-pointer mr-6"
+                      onClick={() => toggleSection("conversations")}
+                    >
+                      <BsChatSquareTextFill size={22} className="mr-2" />
+                      Conversations
+                      <motion.div
+                        animate={
+                          openSection === "conversations" ? "open" : "closed"
+                        }
+                        variants={rotateAnimation}
+                        className="ml-auto"
+                      >
+                        <FiChevronDown size={20} />
+                      </motion.div>
+                    </div>
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{
+                        height: openSection === "conversations" ? "auto" : 0,
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div className="max-w-full mb-6 mr-5">
+                        {/* Conversations */}
+                        <div
+                          className="my-4 flex flex-col gap-4  overflow-y-auto hide-scrollbar"
+                          style={{ maxHeight: "300px" }}
+                        >
+                          <div className="rounded-xl relative group bg-gray-200 p-4 min-w-[200px]">
+                            <div className="flex justify-between items-center">
+                              <RiChat1Line size={22} />
+                              <button className="hidden group-hover:block">
+                                <RiDeleteBinLine color="red" size={18} />
+                              </button>
+                            </div>
+                            <p className="font-semibold text-sm mt-3">
+                              You can select from board list of categories
+                            </p>
+                          </div>
+                          {/* Add more static items as needed */}
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  <hr className="w-[90%] h-[2px] bg-[#c6c6c6] my-4 border-none" />
+
+                  {/* Shortlisted Items Section */}
+                  <div>
+                    <div
+                      className="font-bold flex justify-between items-center cursor-pointer mr-6"
+                      onClick={() => toggleSection("shortlisted")}
+                    >
+                      <FaRectangleList size={22} className="mr-2" />
+                      Shortlisted Items
+                      <motion.div
+                        animate={
+                          openSection === "shortlisted" ? "open" : "closed"
+                        }
+                        variants={rotateAnimation}
+                        className="ml-auto"
+                      >
+                        <FiChevronDown size={20} />
+                      </motion.div>
+                    </div>
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{
+                        height: openSection === "shortlisted" ? "auto" : 0,
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div
+                        className={`my-4 flex flex-col  gap-4  overflow-y-auto hide-scrollbar`}
+                        style={{ maxHeight: "300px" }}
+                      >
+                        {dragStarted && (
+                          <>
+                            <div
+                              style={{
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
+                                zIndex: 11,
+                              }}
+                            />
+                          </>
+                        )}
+                        {/* <Droppable droppableId="dropedItems">
+                          {(provided) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                              style={{ zIndex: 12 }}
+                            >
+                              <div
+                                className={`rounded-md min-w-[60px] p-2 bg-gray-200 w-[60px] h-[60px] flex items-center justify-center border border-dashed border-black ${
+                                  dragStarted && "z-30 bg-[#fff] "
+                                }`}
+                              >
+                                <MdOutlineAddCircle size={28} />
+                              </div>
+                            </div>
+                          )}
+                        </Droppable> */}
+
+                        {shortListItems.map((item) => (
+                          <div
+                            key={item.id}
+                            className="rounded-md group relative flex-shrink-0 flex w-full h-[80px] bg-gray-200 p-4 gap-2"
+                          >
+                            <Image
+                              width={60}
+                              height={60}
+                              className="rounded-md w-14 h-14"
+                              src="https://gearnride.in/wp-content/uploads/2023/01/solace-rain-jacket-rain-pro-v2-2.jpg"
+                            />
+                            <div>
+                              <p className="text-sm font-semibold line-clamp-2 overflow-hidden text-ellipsis w-full">
+                                {item.name}
+                              </p>
+                              <p className="text-sm text-gray-400 italic font-semibold">
+                                &#8377;{item.price}
+                              </p>
+                            </div>
+                            <button
+                              className="hidden group-hover:block"
+                              onClick={() => {
+                                const resetList = shortListItems.filter(
+                                  (list) => list.id !== item.id
+                                );
+                                setShortListItems(resetList);
+                              }}
+                            >
+                              <RiDeleteBinLine color="red" size={18} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </motion.div>
           <div className="flex-1 w-full flex flex-col transition-all duration-300 ">
@@ -363,52 +462,55 @@ const ShopLayout = ({ children }) => {
                       );
                     })}
                   </div>
+                  {breadcrumbArray.some(
+                    (item) => item.level === "grandchild"
+                  ) && (
+                    <div
+                      className="relative"
+                      ref={dropdownRef}
+                      onMouseEnter={toggleDropdown}
+                      onMouseLeave={toggleDropdown}
+                    >
+                      <input
+                        type="text"
+                        value={selectedOption}
+                        readOnly
+                        className="border rounded-xl py-3 px-6 bg-[#04102f] text-sm font-semibold text-white w-full cursor-pointer focus:outline-none focus:ring-0"
+                        placeholder="Select an option"
+                      />
+                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer">
+                        <motion.span
+                          initial={{ rotate: 0 }}
+                          animate={{ rotate: isOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <IoFilterSharp size={22} color="white" />
+                        </motion.span>
+                      </div>
 
-                  <div
-                    className="relative"
-                    ref={dropdownRef}
-                    onMouseEnter={toggleDropdown}
-                    onMouseLeave={toggleDropdown}
-                  >
-                    <input
-                      type="text"
-                      value={selectedOption}
-                      readOnly
-                      className="border rounded-xl py-3 px-6 bg-[#04102f] text-sm font-semibold text-white w-full cursor-pointer focus:outline-none focus:ring-0"
-                      placeholder="Select an option"
-                    />
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer">
-                      <motion.span
-                        initial={{ rotate: 0 }}
-                        animate={{ rotate: isOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <IoFilterSharp size={22} color="white" />
-                      </motion.span>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute z-10  w-full "
+                        >
+                          <div className="bg-gray-200 border rounded mt-2 shadow-lg p-2">
+                            {options.map((option, index) => (
+                              <div
+                                key={index}
+                                onClick={() => handleOptionClick(option)}
+                                className="p-2 hover:bg-white rounded-md cursor-pointer text-sm font-semibold"
+                              >
+                                {option}
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
                     </div>
-
-                    {isOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute z-10  w-full "
-                      >
-                        <div className="bg-gray-200 border rounded mt-2 shadow-lg p-2">
-                          {options.map((option, index) => (
-                            <div
-                              key={index}
-                              onClick={() => handleOptionClick(option)}
-                              className="p-2 hover:bg-white rounded-md cursor-pointer text-sm font-semibold"
-                            >
-                              {option}
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
               <div className="mt-10 px-3">

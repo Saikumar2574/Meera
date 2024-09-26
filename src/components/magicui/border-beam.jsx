@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export const BorderBeam = ({
   className,
   size = 200,
-  duration = 15,
+  duration = 5,
   anchor = 90,
   borderWidth = 1.5,
   colorFrom = "#ffaa40",

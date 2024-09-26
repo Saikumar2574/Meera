@@ -1,32 +1,32 @@
 "use client";
 import { Spinner, Tooltip } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getProductDetails } from "./service/getData";
 import ProductDetails from "./ProductDetails";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ProductCard from "./ui/productCard";
+import { useDispatch } from "react-redux";
+import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
+import { useSelector } from "react-redux";
 
 function ExploreStore({ data }) {
-  const [pinnedProducts, setPinnedProducts] = useState([]);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState(null);
 
+  const pinnedProducts = useSelector((state) => state.products.selectedIds);
+
   const togglePin = (product) => {
-    setPinnedProducts((prevSelectedCards) => {
-      if (
-        prevSelectedCards.some(
-          (prevCard) => prevCard.id === product.id
-        )
-      ) {
-        // If the card is already selected, remove it
-        return prevSelectedCards.filter(
-          (prevCard) => prevCard.id !== product.id
-        );
-      } else {
-        // If the card is not selected, add it
-        return [...prevSelectedCards, product];
-      }
-    });
+    let updatedPinnedProducts;
+    if (pinnedProducts.some((prevCard) => prevCard.id === product.id)) {
+      updatedPinnedProducts = pinnedProducts.filter(
+        (prevCard) => prevCard.id !== product.id
+      );
+    } else {
+      updatedPinnedProducts = [...pinnedProducts, product];
+    }
+
+    dispatch(setSelectedIds(updatedPinnedProducts));
   };
 
   const fetchProductDetails = async (e, id) => {
@@ -37,6 +37,9 @@ function ExploreStore({ data }) {
       setProduct(res?.product);
     }
   };
+  useEffect(() => {
+    dispatch(setSelectedIds([]));
+  }, []);
 
   return (
     <section className="py-4">
@@ -52,29 +55,30 @@ function ExploreStore({ data }) {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {data && data?.map((product, index) => (
-              <Draggable
-                key={product.id}
-                draggableId={product.id}
-                index={index}
-              >
-                {(provided) => (
-                  <div
-                    className="flex flex-col w-[280px] h-[440px] overflow-hidden bg-white rounded-md transition-all duration-700 "
-                    ref={provided.innerRef}
-                    onClick={(e) => fetchProductDetails(e, product.id)}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <ProductCard
-                      product={product || {}}
-                      pinnedProducts={pinnedProducts || []}
-                      togglePin={togglePin}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
+            {data &&
+              data?.map((product, index) => (
+                <Draggable
+                  key={product.id}
+                  draggableId={product.id}
+                  index={product}
+                >
+                  {(provided) => (
+                    <div
+                      className="flex flex-col w-[280px]  overflow-hidden bg-white rounded-md transition-all duration-700 "
+                      ref={provided.innerRef}
+                      onClick={(e) => fetchProductDetails(e, product.id)}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <ProductCard
+                        product={product || {}}
+                        pinnedProducts={pinnedProducts || []}
+                        togglePin={togglePin}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
             {provided.placeholder}
           </div>
         )}

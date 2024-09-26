@@ -26,12 +26,12 @@ export default function ProductList({
   products,
   recomendedProducts,
   loading,
-  // selectedItems,
-  // setSelectedItems,
+  recommendedLoading,
+  // pinnedProducts,
+  // setpinnedProducts,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [selectedItems, setSelectedItems] = useState([]);
   const [isDetail, setIsDetail] = useState(false);
   const [product, setProduct] = useState(null);
   const [cardStyle, setCardStyle] = useState(1);
@@ -44,6 +44,7 @@ export default function ProductList({
   const [productView, setProductView] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const pinnedProducts = useSelector((state) => state.products.selectedIds);
 
   useEffect(() => {
     // Function to check window size
@@ -61,27 +62,26 @@ export default function ProductList({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleCardClick = (card) => {
-    setSelectedItems((prevSelectedCards) => {
-      if (
-        prevSelectedCards.some(
-          (prevCard) => prevCard.productId === card.productId
-        )
-      ) {
-        // If the card is already selected, remove it
-        return prevSelectedCards.filter(
-          (prevCard) => prevCard.productId !== card.productId
-        );
-      } else {
-        // If the card is not selected, add it
-        return [...prevSelectedCards, card];
-      }
-    });
+  const handleCardClick = (product) => {
+    let updatedPinnedProducts;
+    if (
+      pinnedProducts.some(
+        (prevCard) => prevCard.productId === product.productId
+      )
+    ) {
+      updatedPinnedProducts = pinnedProducts.filter(
+        (prevCard) => prevCard.productId !== product.productId
+      );
+    } else {
+      updatedPinnedProducts = [...pinnedProducts, product];
+    }
+
+    dispatch(setSelectedIds(updatedPinnedProducts));
   };
 
   useEffect(() => {
-    dispatch(setSelectedIds(selectedItems));
-  }, [selectedItems]);
+    dispatch(setSelectedIds([]));
+  }, []);
 
   const fetchProductDetails = async (e, id) => {
     e.stopPropagation();
@@ -156,12 +156,12 @@ export default function ProductList({
           <section className="h-full">
             <div
               className={`flex items-center ${
-                selectedItems?.length > 0 ? "justify-between" : "justify-end"
+                pinnedProducts?.length > 0 ? "justify-between" : "justify-end"
               } `}
             >
-              {selectedItems?.length > 0 && (
+              {pinnedProducts?.length > 0 && (
                 <span className="text-md text-gray-600 font-semibold ml-2 mb-4">
-                  {selectedItems?.length} Selected
+                  {pinnedProducts?.length} Selected
                 </span>
               )}
             </div>
@@ -189,7 +189,7 @@ export default function ProductList({
                           >
                             <ProductCard
                               product={card}
-                              pinnedProducts={selectedItems}
+                              pinnedProducts={pinnedProducts}
                               togglePin={handleCardClick}
                             />
                           </div>
@@ -206,7 +206,7 @@ export default function ProductList({
                     The collection below is <br /> the best-match in the store
                   </h3>
                   <div className="flex  flex-wrap gap-8">
-                    {loading ? (
+                    {recommendedLoading ? (
                       [...Array(4)].map((_, index) => (
                         <div key={index} className="relative group">
                           <Skeleton height={250} />
@@ -221,7 +221,11 @@ export default function ProductList({
                               fetchProductDetails(e, card.productId)
                             }
                           >
-                            <ProductCard product={card} />
+                            <ProductCard
+                              product={card}
+                              pinnedProducts={pinnedProducts}
+                              togglePin={handleCardClick}
+                            />
                           </div>
                         </div>
                       ))
@@ -235,7 +239,7 @@ export default function ProductList({
                     store
                   </h3>
                   <div className="flex flex-wrap gap-8 mt-10">
-                    {loading ? (
+                    {recommendedLoading ? (
                       [...Array(4)].map((_, index) => (
                         <div key={index} className="relative group">
                           <Skeleton height={250} />
@@ -250,7 +254,11 @@ export default function ProductList({
                               fetchProductDetails(e, card.productId)
                             }
                           >
-                            <ProductCard product={card} />
+                            <ProductCard
+                              product={card}
+                              pinnedProducts={pinnedProducts}
+                              togglePin={handleCardClick}
+                            />
                           </div>
                         </div>
                       ))

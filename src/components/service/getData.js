@@ -22,7 +22,7 @@ export const getData = async (msg) => {
 export const recommendedProducts = async (data) => {
   // const token = getToken();
   try {
-    const response = await authAxiosInstance.post(`/products/recommendations`, data);
+    const response = await apiAxiosInstance.post(`/products/recommendations`, data);
     return response.data;
   } catch (err) {
     console.error("Request failed:", err.response?.data || err.message);
