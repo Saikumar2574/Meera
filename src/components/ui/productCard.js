@@ -189,7 +189,7 @@ function ProductCard({ product, pinnedProducts, togglePin }) {
                 initial="closed"
                 animate="open"
                 variants={menuVariants}
-                className="absolute bottom-14 right-4 mt-2 w-50  z-10"
+                className="absolute bottom-8 right-0 mt-2 w-50  z-10"
               >
                 <ul className="py-2 px-1 mb-4 text-sm font-semibold bg-gray-200 border rounded-lg shadow-lg">
                   <div className=" my-2 flex w-full items-center justify-center space-x-px">

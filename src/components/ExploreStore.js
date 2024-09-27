@@ -64,11 +64,11 @@ function ExploreStore({ data }) {
                 >
                   {(provided) => (
                     <div
-                      className="flex flex-col w-[280px]  overflow-hidden bg-white rounded-md transition-all duration-700 "
-                      ref={provided.innerRef}
+                      className="flex flex-col w-[280px] overflow-hidden bg-white cursor-pointer rounded-md transition-all duration-700 "
+                      // ref={provided.innerRef}
                       onClick={(e) => fetchProductDetails(e, product.id)}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+                      // {...provided.draggableProps}
+                      // {...provided.dragHandleProps}
                     >
                       <ProductCard
                         product={product || {}}

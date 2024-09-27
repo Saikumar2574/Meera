@@ -57,7 +57,7 @@ export const getQueryData = async (ids, msg) => {
 
 export const getProductDetails = async (id) => {
   try {
-    const response = await authAxiosInstance.get(`/product?id=${id}`);
+    const response = await authAxiosInstance.get(`/products/search?id=${id}`);
     return response.data;
   } catch (err) {
     return { error: err.response?.data || err.message };

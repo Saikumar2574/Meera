@@ -1,9 +1,9 @@
 "use client";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { MdOutlineAddCircle, MdPushPin } from "react-icons/md";
+import { MdOutlineAddCircle, MdPerson, MdPushPin } from "react-icons/md";
 import { FiChevronDown } from "react-icons/fi";
 import { BsChatSquareTextFill } from "react-icons/bs";
 import { RiChat1Line, RiDeleteBinLine } from "react-icons/ri";
@@ -13,15 +13,16 @@ import Footer from "@/components/Footer";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
+import { logout } from "@/lib/redux/reducer/authReducer";
+import Auth from "@/components/Auth";
 
 function layout({ children }) {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth?.token || null);
   const [dragStarted, setDragStarted] = useState(false);
   const [shortListItems, setShortListItems] = useState([]);
-  const [isPinnedOpen, setIsPinnedOpen] = useState(true);
-  const [isConversationsOpen, setIsConversationsOpen] = useState(true);
-  const [isShortListedOpen, setIsShortListedOpen] = useState(true);
-  const pinnedItems = useSelector((state) => state.products.selectedIds);
+  const pinnedItems = useSelector((state) => state.products?.selectedIds);
+  const [showAuth, setShowAuth] = useState(false);
 
   const [openSection, setOpenSection] = useState("");
 
@@ -50,11 +51,25 @@ function layout({ children }) {
     open: { rotate: 0 },
     closed: { rotate: 180 },
   };
+  // Effect to expand Pinned Items section if a new item is added
+  useEffect(() => {
+    if (pinnedItems && pinnedItems.length > 0) {
+      setOpenSection("pinned");
+    }
+  }, [pinnedItems]);
+
+  // Effect to expand Shortlisted Items section if a new item is added
+  useEffect(() => {
+    if (shortListItems && shortListItems.length > 0) {
+      setOpenSection("shortlisted");
+    }
+  }, [shortListItems]);
   return (
     <DragDropContext
       onDragEnd={handleDragEnd}
       onDragStart={() => setDragStarted(true)}
     >
+      <Auth openModal={showAuth} onCloseModal={() => setShowAuth(false)} />
       <div className={`flex h-full flex-1 overflow-hidden`}>
         <motion.div
           className={`relative h-full transition-transform duration-300  w-[20%] xl:w-[25%] 4xl:w-[20%] overflow-hidden`}
@@ -69,13 +84,26 @@ function layout({ children }) {
                     alt="Shop Logo"
                   />
                 </Link>
-                <button className="rounded-full bg-gray-200">
-                  <img
-                    src="/avatar.png"
-                    className="w-12 h-12"
-                    alt="Shop Logo"
-                  />
-                </button>
+                {token ? (
+                  <button
+                    onClick={() => dispatch(logout())}
+                    className="rounded-full bg-gray-200"
+                  >
+                    <img
+                      src="/avatar.png"
+                      className="w-12 h-12"
+                      alt="Shop Logo"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowAuth(true)}
+                    className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
+                  >
+                    <MdPerson size={26} />
+                    <span className="hidden md:inline ml-3">Login</span>
+                  </button>
+                )}
               </div>
               <div>
                 <h6 className="italic text-gray-500 font-bold text-sm mb-2">
@@ -94,7 +122,7 @@ function layout({ children }) {
                   onClick={() => toggleSection("pinned")}
                 >
                   <MdPushPin size={22} className="mr-2" />
-                  Pinned Items
+                  Pinned Items ({pinnedItems?.length || 0})
                   <motion.div
                     animate={openSection === "pinned" ? "open" : "closed"}
                     variants={rotateAnimation}

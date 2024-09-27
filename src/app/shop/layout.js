@@ -4,51 +4,35 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import { useRouter, usePathname } from "next/navigation";
-import Cart from "@/components/Cart";
-import Whishlist from "@/components/Whishlist";
-import {
-  getCartDetails,
-  getHistory,
-  getWhishlistDetails,
-} from "@/components/service/getData";
-import {
-  MdDelete,
-  MdOutlineAddCircle,
-  MdOutlinePerson,
-  MdPushPin,
-} from "react-icons/md";
-import { Drawer } from "flowbite-react";
-import Search from "@/components/Search";
+import { MdPerson, MdPushPin } from "react-icons/md";
 import Sidebar from "@/components/Sidebar";
 import { BsChatSquareTextFill } from "react-icons/bs";
 import { RiChat1Line, RiDeleteBinLine } from "react-icons/ri";
 import Image from "next/image";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { FaRectangleList, FaRegRectangleList } from "react-icons/fa6";
-import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { IoFilterSharp } from "react-icons/io5";
 import { FiChevronDown } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
 import { useDispatch } from "react-redux";
+import { logout } from "@/lib/redux/reducer/authReducer";
+import Auth from "@/components/Auth";
 
 const ShopLayout = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth?.token || null);
   const isSidebarOpen = true;
   const [breadcrumbArray, setBreadcrumbArray] = useState([]);
-  const [openCart, setOpenCart] = useState(false);
-  const [cartDetails, setCartDetails] = useState(null);
-  const [openWishList, setOpenWishList] = useState(false);
-  const [wishtList, setWishtList] = useState(null);
-  const [isSearch, setIsSearch] = useState(false);
   const [dragStarted, setDragStarted] = useState(false);
   const [shortListItems, setShortListItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Relevence");
   const dropdownRef = useRef(null); // Reference for the dropdown
   const pinnedProducts = useSelector((state) => state.products?.selectedIds);
+  const [showAuth, setShowAuth] = useState(false);
 
   const [openSection, setOpenSection] = useState("");
 
@@ -57,24 +41,11 @@ const ShopLayout = ({ children }) => {
     setOpenSection((prev) => (prev === section ? "" : section)); // Close if same section clicked again
   };
   const toggleDropdown = () => setIsOpen((prev) => !prev);
+
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const options = [
     "Price : High-Low",
@@ -115,32 +86,8 @@ const ShopLayout = ({ children }) => {
     router.push(item.url); // Navigate to the clicked breadcrumb's URL
   };
 
-  const toggleCart = async () => {
-    const res = await getCartDetails();
-    if (res) {
-      setCartDetails(res);
-      setOpenCart(true);
-    }
-  };
-
-  const getWishList = async () => {
-    const res = await getWhishlistDetails();
-    if (res?.wishlists) {
-      setWishtList(res?.wishlists);
-      setOpenWishList(true);
-    }
-  };
-
-  const fetchHistory = async () => {
-    const res = await getHistory();
-    if (res) {
-      setIsSearch(true);
-    }
-  };
-
   const handleDragEnd = (result) => {
     const { destination, source } = result;
-    debugger;
     setDragStarted(false);
     if (!destination) return;
     if (destination.droppableId === "dropedItems") {
@@ -158,15 +105,37 @@ const ShopLayout = ({ children }) => {
     dispatch(setSelectedIds(resetProsucts));
   };
 
+  useEffect(() => {
+    if (!token) {
+      router.push("/shop");
+    }
+  }, [token]);
+
   const rotateAnimation = {
     open: { rotate: 0 },
     closed: { rotate: 180 },
   };
+
+  // Effect to expand Pinned Items section if a new item is added
+  useEffect(() => {
+    if (pinnedProducts && pinnedProducts.length > 0) {
+      setOpenSection("pinned");
+    }
+  }, [pinnedProducts]);
+
+  // Effect to expand Shortlisted Items section if a new item is added
+  useEffect(() => {
+    if (shortListItems && shortListItems.length > 0) {
+      setOpenSection("shortlisted");
+    }
+  }, [shortListItems]);
+
   return (
     <div className="w-full flex h-full">
       <aside className="hidden lg:block w-16 fixed left-0 top-0 bottom-0 z-40 bg-[#04102f]">
         <Sidebar />
       </aside>
+      <Auth openModal={showAuth} onCloseModal={() => setShowAuth(false)} />
       <DragDropContext
         onDragEnd={handleDragEnd}
         onDragStart={() => setDragStarted(true)}
@@ -187,13 +156,26 @@ const ShopLayout = ({ children }) => {
                       alt="Shop Logo"
                     />
                   </Link>
-                  <button className="rounded-full bg-gray-200">
-                    <img
-                      src="/avatar.png"
-                      className="w-12 h-12"
-                      alt="Shop Logo"
-                    />
-                  </button>
+                  {token ? (
+                    <button
+                      onClick={() => dispatch(logout())}
+                      className="rounded-full bg-gray-200"
+                    >
+                      <img
+                        src="/avatar.png"
+                        className="w-12 h-12"
+                        alt="Shop Logo"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowAuth(true)}
+                      className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
+                    >
+                      <MdPerson size={26} />
+                      <span className="hidden md:inline ml-3">Login</span>
+                    </button>
+                  )}
                 </div>
                 <div>
                   <h6 className="italic text-gray-500 font-bold text-sm mb-2">
@@ -213,7 +195,7 @@ const ShopLayout = ({ children }) => {
                       onClick={() => toggleSection("pinned")}
                     >
                       <MdPushPin size={22} className="mr-2" />
-                      Pinned Items
+                      Pinned Items ({pinnedProducts?.length || 0})
                       <motion.div
                         animate={openSection === "pinned" ? "open" : "closed"}
                         variants={rotateAnimation}
@@ -531,28 +513,6 @@ const ShopLayout = ({ children }) => {
           </div>
         </div>
       </DragDropContext>
-      {/* <Cart
-        isOpen={openCart}
-        onClose={() => setOpenCart(false)}
-        cartDetails={cartDetails}
-        getCartDetails={toggleCart}
-      />
-      <Whishlist
-        isOpen={openWishList}
-        onClose={() => setOpenWishList(false)}
-        data={wishtList}
-        getWishList={getWishList}
-      />
-      <Drawer
-        className="w-96"
-        open={isSearch}
-        onClose={() => setIsSearch(false)}
-      >
-        <Drawer.Header title="" titleIcon={() => <></>} />
-        <Drawer.Items className="p-4">
-          <Search />
-        </Drawer.Items>
-      </Drawer> */}
     </div>
   );
 };

@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
 import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import ProductCard from "./ui/productCard";
 
 export default function ProductList({
@@ -44,7 +45,7 @@ export default function ProductList({
   const [productView, setProductView] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const pinnedProducts = useSelector((state) => state.products.selectedIds);
+  const pinnedProducts = useSelector((state) => state.products?.selectedIds);
 
   useEffect(() => {
     // Function to check window size
@@ -173,16 +174,20 @@ export default function ProductList({
                   </h3>
                   <div className="flex flex-wrap gap-8">
                     {loading ? (
-                      [...Array(4)].map((_, index) => (
-                        <div key={index} className="relative group">
-                          <Skeleton height={250} />
+                      [...Array(3)].map((_, index) => (
+                        <div
+                          key={index}
+                          className="relative group"
+                          style={{ minHeight: "250px" }}
+                        >
+                          <Skeleton height={250} width={280} />
                         </div>
                       ))
                     ) : products?.length > 0 ? (
                       products?.map((card, index) => (
                         <div key={index} className="relative group">
                           <div
-                            className="flex flex-col w-[280px] h-[440px] overflow-hidden bg-white rounded-md transition-all duration-700 "
+                            className="flex flex-col w-[280px] cursor-pointer overflow-hidden bg-white rounded-md transition-all duration-700 "
                             onClick={(e) =>
                               fetchProductDetails(e, card.productId)
                             }
@@ -207,16 +212,20 @@ export default function ProductList({
                   </h3>
                   <div className="flex  flex-wrap gap-8">
                     {recommendedLoading ? (
-                      [...Array(4)].map((_, index) => (
-                        <div key={index} className="relative group">
-                          <Skeleton height={250} />
+                      [...Array(3)].map((_, index) => (
+                        <div
+                          key={index}
+                          className="relative group"
+                          style={{ minHeight: "250px" }}
+                        >
+                          <Skeleton height={250} width={280} />
                         </div>
                       ))
                     ) : recomendedProducts?.good_match?.length > 0 ? (
                       recomendedProducts?.good_match.map((card, index) => (
                         <div key={index} className="relative group">
                           <div
-                            className="flex flex-col w-[280px] h-[440px] overflow-hidden bg-white rounded-md transition-all duration-700 "
+                            className="flex flex-col w-[280px]  cursor-pointer overflow-hidden bg-white rounded-md transition-all duration-700 "
                             onClick={(e) =>
                               fetchProductDetails(e, card.productId)
                             }
@@ -240,16 +249,20 @@ export default function ProductList({
                   </h3>
                   <div className="flex flex-wrap gap-8 mt-10">
                     {recommendedLoading ? (
-                      [...Array(4)].map((_, index) => (
-                        <div key={index} className="relative group">
-                          <Skeleton height={250} />
+                      [...Array(3)].map((_, index) => (
+                        <div
+                          key={index}
+                          className="relative group"
+                          style={{ minHeight: "250px" }}
+                        >
+                          <Skeleton height={250} width={280} />
                         </div>
                       ))
                     ) : recomendedProducts?.partial_match?.length > 0 ? (
                       recomendedProducts?.partial_match.map((card, index) => (
                         <div key={index} className="relative group">
                           <div
-                            className="flex flex-col w-[280px] h-[440px] overflow-hidden bg-white rounded-md transition-all duration-700 "
+                            className="flex flex-col w-[280px]  cursor-pointer overflow-hidden bg-white rounded-md transition-all duration-700 "
                             onClick={(e) =>
                               fetchProductDetails(e, card.productId)
                             }

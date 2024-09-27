@@ -8,12 +8,6 @@ export const login = async (credentials) => {
       username: credentials.email,
       password: credentials.password,
     });
-
-    // Check if the response has a token and store it
-    if (response.data.token && typeof window !== "undefined") {
-      localStorage.setItem("token", response.data.token);
-    }
-
     return response.data;
   } catch (err) {
     console.error(err.message);
@@ -29,12 +23,6 @@ export const signUp = async (credentials) => {
       password: credentials.password,
       meta: {},
     });
-
-    // Check if the response has a token and store it
-    if (response.data.token && typeof window !== "undefined") {
-      localStorage.setItem("token", response.data.token);
-    }
-
     return response.data;
   } catch (err) {
     console.error(err.message);
