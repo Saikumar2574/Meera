@@ -19,10 +19,24 @@ export const getData = async (msg) => {
   }
 };
 
-export const retriveProducts = async (data) => {
+export const recommendedProducts = async (data) => {
   // const token = getToken();
   try {
-    const response = await apiAxiosInstance.post(`/retrieve`, data);
+    const response = await apiAxiosInstance.post(`/products/recommendations`, data);
+    return response.data;
+  } catch (err) {
+    console.error("Request failed:", err.response?.data || err.message);
+    return { error: err.response?.data || err.message };
+  }
+};
+
+export const retriveProducts = async (page, data) => {
+  // const token = getToken();
+  try {
+    const response = await authAxiosInstance.post(
+      `/products/search/relevance?page=${page}&page_size=20`,
+      data
+    );
     return response.data;
   } catch (err) {
     console.error("Request failed:", err.response?.data || err.message);
@@ -43,7 +57,7 @@ export const getQueryData = async (ids, msg) => {
 
 export const getProductDetails = async (id) => {
   try {
-    const response = await authAxiosInstance.get(`/product?id=${id}`);
+    const response = await authAxiosInstance.get(`/products/search?id=${id}`);
     return response.data;
   } catch (err) {
     return { error: err.response?.data || err.message };

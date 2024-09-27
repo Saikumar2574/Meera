@@ -24,7 +24,7 @@ function HomePage(props) {
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center  w-full relative overflow-y-auto p-4 md:p-0">
+    <div className="flex h-full flex-1 items-center justify-center  w-full relative overflow-y-auto p-4 md:p-0">
       <div className="max-w-[600px] md:max-w-[900px] w-full h-full relative flex flex-col md:flex-row">
         <div className="flex flex-col justify-center items-center">
           <p className="text-xs italic bg-yellow-300 py-2 px-4 rounded-lg font-bold mb-2">
@@ -47,9 +47,10 @@ function HomePage(props) {
                   : "bg-white text-black"
               } p-6 md:p-8 rounded-lg flex flex-col justify-between cursor-pointer h-60 md:h-80 transition-transform transform border hover:scale-105`}
               style={{ boxShadow: "10px 5px 20px rgba(131, 131, 131, 0.21)" }}
-              onClick={() =>
-                handleActionClick("Looking for something specific")
-              }
+              onClick={() => {
+                dispatch(resetState())
+                router.push("/shop");
+              }}
             >
               <CiShoppingTag
                 size={30}
@@ -100,10 +101,10 @@ function HomePage(props) {
                   : "bg-white text-black"
               } p-6 md:p-8 rounded-lg flex flex-col justify-between cursor-pointer  h-60 md:h-80 transition-transform transform border hover:scale-105`}
               style={{ boxShadow: "10px 5px 20px rgba(131, 131, 131, 0.21)" }}
-              onClick={() => {
-                dispatch(resetState())
-                router.push("/shop");
-              }}
+              // onClick={() => {
+              //   dispatch(resetState())
+              //   router.push("/shop");
+              // }}
             >
               <IoStorefrontOutline size={30} />
               <p className="text-lg md:text-xl font-bold italic overflow-hidden">

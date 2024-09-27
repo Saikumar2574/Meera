@@ -20,7 +20,7 @@ function Understanding({
 
   return (
     <div className="flex flex-col relative mt-8">
-      <h2 className="mt-30 ml-0 md:ml-6 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6  md:leading-[55px]">
+      <h2 className="mt-30 ml-0 md:ml-6 text-xl font-bold sm:text-4xl italic dark:text-white text-black leading-6  md:leading-[55px]">
         Hey there,
         <br />
         this is what i could process ...
@@ -117,9 +117,12 @@ function Understanding({
                   onClick={() => {
                     const state = {
                       product: item.product,
-                      child_category: item.child_category,
                       parent_category: item.parent_category,
+                      child_category: item.child_category,
                       grand_child_category: item.grand_child_category,
+                      overal_budget: data.price || {},
+                      related_price: item.price || {},
+                      attributes: item.attributes || [],
                       search_phrase: item.search_phrase,
                     };
                     const encodedState = encodeURIComponent(

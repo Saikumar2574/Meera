@@ -52,11 +52,11 @@ function page(props) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-20">
-      <h2 className="mb-10 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6 md:leading-[55px]">
+    <section>
+      <h2 className="mb-10 text-4xl font-bold italic capitalize dark:text-white text-black leading-6 md:leading-[55px]">
         {selectedChild && selectedChild.name}
       </h2>
-      <div className="grid grid-cols-5 gap-10">
+      <div className="flex flex-wrap gap-8">
         {grandchildCategories?.map((grandchild) => (
           <div key={grandchild.id} className="mb-2">
             <div
@@ -78,7 +78,7 @@ function page(props) {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -17,11 +17,15 @@ import Whishlist from "./Whishlist";
 import Search from "./Search";
 import { ModeToggle } from "./ScreenMode";
 import { useRouter } from "next/navigation";
+import { logout } from "@/lib/redux/reducer/authReducer";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export function Header({ reset, setOpenModal }) {
-  const router = useRouter()
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const token = useSelector(state =>state.auth?.token || null)
   const [showAuth, setShowAuth] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
 
   const [openCart, setOpenCart] = useState(false);
@@ -47,16 +51,10 @@ export function Header({ reset, setOpenModal }) {
     }
   };
 
-  useEffect(() => {
-    // Check if token exists in session storage
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
 
   const handleLogout = () => {
     setMobileMenu(false);
-    localStorage.removeItem("token"); // Clear the token
-    setIsLoggedIn(false); // Update state
+    dispatch(logout())
   };
 
   return (
@@ -81,24 +79,20 @@ export function Header({ reset, setOpenModal }) {
         </Link>
         <div className="hidden md:block ">
           <div className="flex items-center gap-10">
-          <ModeToggle/>
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="  flex text-black hover:text-gray-600  font-semibold text-lg   rounded-full md:rounded-full"
-            >
-              <MdLogout size={26} />
-              <span className="hidden md:inline ml-3">Logout</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowAuth(true)}
-              className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
-            >
-              <MdPerson size={26} />
-              <span className="hidden md:inline ml-3">Login</span>
-            </button>
-          )}
+            <ModeToggle />
+            {token ? (
+              <button onClick={handleLogout} className="rounded-full">
+                <img src="/avatar.png" className="w-14 h-14" alt="Shop Logo" />
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowAuth(true)}
+                className=" flex text-black  hover:text-gray-600    font-semibold text-lg   rounded-full md:rounded-full"
+              >
+                <MdPerson size={26} />
+                <span className="hidden md:inline ml-3">Login</span>
+              </button>
+            )}
           </div>
         </div>
         <button
@@ -111,7 +105,6 @@ export function Header({ reset, setOpenModal }) {
       <Auth
         openModal={showAuth}
         onCloseModal={() => setShowAuth(false)}
-        setIsLoggedIn={setIsLoggedIn}
       />
       <div className="block md:hidden">
         <Drawer open={mobileMenu} onClose={() => setMobileMenu(false)}>
@@ -142,7 +135,7 @@ export function Header({ reset, setOpenModal }) {
                     >
                       Search
                     </Sidebar.Item>
-                    {isLoggedIn ? (
+                    {token ? (
                       <Sidebar.Item onClick={handleLogout} icon={MdLogout}>
                         Logout
                       </Sidebar.Item>

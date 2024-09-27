@@ -38,8 +38,8 @@ function Page() {
 
   return (
     <>
-     <Header/>
-      <div className="flex items-center justify-center h-full w-full relative overflow-y-auto">
+      <Header />
+      <div className="flex items-center justify-center w-full relative">
         <div className="max-w-[1200px] w-full h-full p-6 relative">
           {/* {loading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

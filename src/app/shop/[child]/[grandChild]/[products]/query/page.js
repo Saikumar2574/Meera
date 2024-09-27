@@ -21,7 +21,7 @@ function Page() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const itemIds = selectedItems.map((item) => item.productId).join(",");
+      const itemIds = selectedItems.map((item) => item.id).join(",");
       const res = await getQueryData(itemIds, msg); // Fetch data using 'msg' from the URL
       if (res?.error) {
         console.error("Error fetching data:", res?.error);
@@ -48,8 +48,8 @@ function Page() {
     } else {
       setSelectedItems((prevItems) =>
         prevItems.filter((item) => {
-          if (item?.productId) {
-            return item.productId !== id;
+          if (item?.id) {
+            return item.id !== id;
           }
         })
       );

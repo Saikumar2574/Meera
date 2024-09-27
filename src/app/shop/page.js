@@ -14,6 +14,7 @@ import {
 
 const ParentCategoriesPage = () => {
   const dispatch = useDispatch();
+  const token = useSelector(state => state.auth?.token || null)
   const router = useRouter();
   const parentCategories = useSelector((state) => state.shop.parentCategories);
   const selectedParent = useSelector((state) => state.shop.selectedParent);
@@ -29,9 +30,9 @@ const ParentCategoriesPage = () => {
         console.error("Error fetching parent categories:", error);
       }
     };
-
+  if(token)
     fetchParentCategories();
-  }, [dispatch]);
+  }, [dispatch,token]);
 
   const handleParentClick = (parent) => {
     const payload = { id: parent.id, name: parent.name };
@@ -40,11 +41,11 @@ const ParentCategoriesPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-20">
-      <h2 className="mb-10 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6 md:leading-[55px]">
+    <div>
+      <h2 className="mb-10 text-4xl font-bold italic dark:text-white text-black leading-6 md:leading-[55px]">
         Popular Categories
       </h2>
-      <div className="grid grid-cols-5 gap-10">
+      <div  className="flex flex-wrap gap-8">
         {parentCategories.map((parent) => (
           <div key={parent.id} className="mb-2">
             <div

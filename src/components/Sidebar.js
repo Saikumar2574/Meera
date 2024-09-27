@@ -16,14 +16,14 @@ import {
   getWhishlistDetails,
 } from "./service/getData";
 import Whishlist from "./Whishlist";
-import { FaCog, FaPlus } from "react-icons/fa";
-import { FaCirclePlus } from "react-icons/fa6";
+import { FaCirclePlus ,FaPlus } from "react-icons/fa6";
 import { IoStorefrontOutline } from "react-icons/io5";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { BsChatSquareText } from "react-icons/bs";
 
-const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
-  const route = useRouter()
+const Sidebar = ({ component, setComponent, setIsSearch, setModel }) => {
+  const route = useRouter();
   const [openCart, setOpenCart] = useState(false);
   const [cartDetails, setCartDetails] = useState(null);
   const [openWishList, setOpenWishList] = useState(false);
@@ -61,25 +61,32 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
   }, [language]);
 
   return (
-    <div className="fixed p-4 flex justify-center items-center h-[80%] flex-col gap-y-8 lg:gap-y-10">
+    <div className="fixed p-3 flex justify-center items-center h-full flex-col gap-y-8 lg:gap-y-10">
       <div>
-        <Tooltip content={<>New&nbsp;Conversation</>} placement="right">
+        <Tooltip
+          content={<>New&nbsp;Conversation</>}
+          placement="right"
+          className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4"
+        >
           <button
-            className={`p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group ${pathname.startsWith('/search') || pathname === "/" && "bg-gray-200"}`}
-            onClick={()=>route.push("/")}
+            className={`p-2 hover:bg-gray-200 rounded-md transition-colors group ${
+              (pathname.startsWith("/search") || pathname === "/") &&
+              "bg-gray-200"
+            }`}
+            onClick={() => route.push("/")}
           >
             <FaPlus
-              size={22}
+              size={20}
               className={`${
-                pathname.startsWith('/search') || pathname === "/"
+                pathname.startsWith("/search") || pathname === "/"
                   ? "text-black"
-                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+                  : "text-gray-400 group-hover:text-black"
               } `}
             />
           </button>
         </Tooltip>
       </div>
-      
+
       {/* <div>
         <Tooltip content="Menu" placement="right">
           <button
@@ -94,33 +101,35 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
               className={`${
                 component === null
                   ? "text-black"
-                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+                  : "text-gray-400 group-hover:text-black"
               } `}
             />
           </button>
         </Tooltip>
       </div> */}
       <div>
-        <Tooltip content={<>Browse&nbsp;the&nbsp;store</>} placement="right">
+        <Tooltip content={<>Browse&nbsp;the&nbsp;store</>} placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
           <button
-            className={`p-2 rounded-full hover:bg-gray-200 hover:rounded-md transition-colors group ${pathname.startsWith('/shop') && "bg-gray-200"}`}
+            className={`p-2  hover:bg-gray-200 rounded-md transition-colors group ${
+              pathname.startsWith("/shop") && "bg-gray-200"
+            }`}
             onClick={() => {
-              route.push("/shop")
+              route.push("/shop");
             }}
           >
             <IoStorefrontOutline
               size={22}
               className={`${
-                pathname.startsWith('/shop')
+                pathname.startsWith("/shop")
                   ? "text-black"
-                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+                  : "text-gray-400 group-hover:text-black"
               } `}
             />
           </button>
         </Tooltip>
       </div>
       <div>
-        <Tooltip content="Wishlist" placement="right">
+        <Tooltip content="Wishlist" placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
           <button
             className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md  transition-colors group"
             onClick={getWishList}
@@ -130,37 +139,37 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
               className={`${
                 component === "wishlist"
                   ? "text-black"
-                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+                  : "text-gray-400 group-hover:text-black"
               } `}
             />
           </button>
         </Tooltip>
       </div>
       <div>
-        <Tooltip content="Cart" placement="right">
+        <Tooltip content="Cart" placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
           <button
             className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md  transition-colors group"
             onClick={toggleCart}
           >
             <HiOutlineShoppingCart
               size={22}
-              className="text-gray-400 group-hover:text-[#b6b5d4]"
+              className="text-gray-400 group-hover:text-black"
             />
           </button>
         </Tooltip>
       </div>
       <div>
-        <Tooltip content="Search" placement="right">
+        <Tooltip content={<>All&nbsp;Conversations</>} placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
           <button
             className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md  transition-colors group"
             onClick={fetchHistory}
           >
-            <HiOutlineSearch
+            <BsChatSquareText
               size={22}
               className={`${
                 component === "search"
                   ? "text-black"
-                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+                  : "text-gray-400 group-hover:text-black"
               }`}
             />
           </button>
@@ -177,7 +186,7 @@ const Sidebar = ({ component, setComponent, setIsSearch,setModel }) => {
               className={`${
                 component === "search"
                   ? "text-black"
-                  : "text-gray-400 group-hover:text-[#b6b5d4]"
+                  : "text-gray-400 group-hover:text-black"
               }`}
             />
           </button>

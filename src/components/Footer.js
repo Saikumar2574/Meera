@@ -12,9 +12,12 @@ import { ImMic } from "react-icons/im";
 import { FaStopCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { usePathname, useRouter } from "next/navigation";
+import { getData } from "./service/getData";
+import { useSelector } from "react-redux";
 
 function Footer() {
   const router = useRouter();
+  const token = useSelector((state) => state.auth?.token || null);
   const pathname = usePathname();
   const [searchText, setSearchText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -23,6 +26,7 @@ function Footer() {
   const [action, setAction] = useState(null);
   const scale = useMotionValue(1);
   const transformScale = useTransform(scale, [0, 1], [0.8, 1.2]);
+
 
   const placeholders1 = [
     "Show me riding jackets, pants and gloves",
@@ -139,9 +143,41 @@ function Footer() {
     setSearchText(e.target.value);
   };
 
+  const fetchShopQuery = async (value) => {
+    const pathSegments = pathname.split("/").filter((segment) => segment);
+    if (pathSegments.length === 4) {
+      router.push(pathname + `/query?msg=${value}`);
+    } else {
+      try {
+        const data = await getData(value);
+        if (data && data?.category_lists) {
+          if (data?.category_lists?.length > 1) {
+            router.push(`/search?prompt=${value}`);
+          } else {
+            const state = {
+              product: data?.category_lists?.[0]?.product,
+              parent_category: data?.category_lists?.[0]?.parent_category,
+              child_category: data?.category_lists?.[0]?.child_category,
+              grand_child_category:
+                data?.category_lists?.[0]?.grand_child_category,
+              overal_budget: data.price || {},
+              related_price: data?.category_lists?.[0]?.price || {},
+              attributes: data?.category_lists?.[0]?.attributes || [],
+              search_phrase: data?.category_lists?.[0]?.search_phrase,
+            };
+            const encodedState = encodeURIComponent(JSON.stringify(state));
+            router.push(`/search/products?query=${encodedState}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+      }
+    }
+  };
+
   const onSubmit = (value) => {
-    setSearchText("")
-    const token = localStorage.getItem("token");
+    setSearchText("");
     if (!token) {
       alert("Session expired or invalid token. Please log in again.");
       return;
@@ -150,24 +186,26 @@ function Footer() {
       router.push(`/search?prompt=${value}`);
     } else if (pathname.startsWith("/search/products")) {
       router.push(`/search/products/query?msg=${value}`);
+    } else if (pathname.startsWith("/shop")) {
+      fetchShopQuery(value);
     }
   };
 
   return (
-    <div className="w-full sticky bottom-0" style={{ zIndex: 10 }}>
-      <div
-        className="hidden md:block relative"
-        style={{
+    <div
+      className="w-full sticky bottom-0 bg-[#ffffff50]"
+      style={{
         //   border: "1px solid rgb(108 108 108 / 30%)",
         //   boxShadow: " 0 8px 32px rgba(0, 0, 0, 0.25)",
         //   background:
         //     "linear-gradient(to bottom, rgba(200, 200, 200, 0.2), rgba(255, 255, 255, 0.2))",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: " blur(20px)",
-          paddingBottom: "0.75rem",
-        }}
-      >
-
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: " blur(20px)",
+        paddingBottom: "0.75rem",
+        zIndex: 10,
+      }}
+    >
+      <div className="hidden md:block relative px-20">
         <PlaceholdersAndVanishTextarea
           value={searchText}
           setValue={setSearchText}

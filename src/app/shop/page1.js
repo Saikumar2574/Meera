@@ -225,7 +225,7 @@ const Page = ({ children }) => {
         >
           <main className="h-full overflow-y-auto px-20">
             <div className="max-w-7xl mx-auto mt-20">
-              <h2 className="  mb-10 text-xl font-bold sm:text-[40px] italic dark:text-white text-black leading-6  md:leading-[55px]">
+              <h2 className="  mb-10 text-4xl font-bold italic dark:text-white text-black leading-6  md:leading-[55px]">
                 Hey there,
                 <br />
                 this is what i could process ...

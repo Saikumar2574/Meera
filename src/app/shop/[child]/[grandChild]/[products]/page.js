@@ -1,13 +1,13 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import InfiniteScroll from "react-infinite-scroll-component";
 import {
   fetchProducts,
   setProducts,
   setHasMore,
 } from "@/lib/redux/reducer/storeReducer";
 import ExploreStore from "@/components/ExploreStore";
-import { useEffect, useState } from "react";
+import { Pagination } from "flowbite-react";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
@@ -18,52 +18,71 @@ const ProductsPage = () => {
   const hasMore = useSelector((state) => state.shop.hasMore);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const loadMoreProducts = async () => {
-    debugger;
-    if (loading || !hasMore) return; // Prevent multiple simultaneous requests
+  const [totalPages, setTotalPages] = useState(1); // Default total pages
+
+  // Function to fetch products for the selected page
+  const loadMoreProducts = async (page = 1) => {
+    if (loading) return;
     setLoading(true);
     try {
-      await dispatch(
-        fetchProducts({ categoryId: selectedGrandChild.id, page: currentPage })
+      const response = await dispatch(
+        fetchProducts({ categoryId: selectedGrandChild.id, page })
       );
-      setCurrentPage(currentPage + 1);
+
+      // Assuming response contains pagination data like in the API you provided
+      const { products, pagination } = response.payload;
+      dispatch(setProducts(products));
+      setTotalPages(pagination.total_pages);
     } catch (error) {
-      console.error("Error loading more products:", error);
+      console.error("Error loading products:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+    dispatch(setProducts([])); // Reset products on page change
+    loadMoreProducts(page);
+  };
+
   useEffect(() => {
     dispatch(setHasMore(true));
     dispatch(setProducts([]));
   }, []);
+
   useEffect(() => {
     if (selectedGrandChild && hasMore) {
-      loadMoreProducts();
+      loadMoreProducts(currentPage);
     }
   }, [selectedGrandChild, hasMore]);
 
   return (
-    <div className="max-w-7xl mx-auto mt-20">
-      <h2 className="mb-5 text-xl font-bold capitalize dark:text-white text-black">
+    <section>
+      <h2 className=" text-4xl font-bold italic capitalize dark:text-white text-black leading-6 md:leading-[55px]">
         {selectedGrandChild?.name}
       </h2>
+
       {products?.length ? (
-        <InfiniteScroll
-          dataLength={products?.length || 0} // Ensure this is correctly set
-          next={loadMoreProducts}
-          hasMore={hasMore} // Use dynamic hasMore state
-          loader={<h4>Loading...</h4>}
-          endMessage={<p>No more products to load</p>}
-          scrollableTarget="scrollableDiv"
-          scrollThreshold={0.9}
-        >
+        <div>
           <ExploreStore data={products} />
-        </InfiniteScroll>
+
+          {/* Add Pagination Component */}
+          <div className="flex overflow-x-auto sm:justify-center mt-4">
+            
+            <Pagination
+            //   layout="table"
+              currentPage={currentPage}
+              totalPages={totalPages} // Use totalPages from API
+              onPageChange={onPageChange}
+              showIcons
+            />
+          </div>
+        </div>
       ) : (
         "No Products Available"
       )}
-    </div>
+    </section>
   );
 };
 

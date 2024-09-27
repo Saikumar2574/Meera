@@ -1,3 +1,4 @@
+import { store } from "@/lib/redux/store";
 import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -13,20 +14,18 @@ const authAxiosInstance = axios.create({
   baseURL: AUTH_URL,
 });
 
+// Get token from Redux store
+const getTokenFromRedux = () => {
+  const state = store.getState(); // Access the Redux store
+  return state.auth.token; // Assuming your token is in the auth slice
+};
 
+// Request interceptor for apiAxiosInstance
 apiAxiosInstance.interceptors.request.use(
   async (config) => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getTokenFromRedux(); // Get token from Redux instead of localStorage
     if (token) {
-      //   const verificationResult = await verifyToken(token);
-      //   if (verificationResult.error) {
-      //     alert("Session expired or invalid token. Please log in again.");
-      //     localStorage.removeItem("token");
-      //     return Promise.reject(new Error("Token verification failed."));
-      //   } else {
       config.headers.Authorization = `Bearer ${token}`;
-      //   }
     }
     return config;
   },
@@ -39,7 +38,7 @@ apiAxiosInstance.interceptors.response.use(
   async (error) => {
     const { response } = error;
     if (response && response.status === 401) {
-      localStorage.removeItem("token");
+      store.dispatch({ type: 'auth/logout' }); // Dispatch a logout action if token is invalid
       alert("Session expired or invalid token. Please log in again.");
       return;
     }
@@ -50,22 +49,13 @@ apiAxiosInstance.interceptors.response.use(
 // Request interceptor for authAxiosInstance
 authAxiosInstance.interceptors.request.use(
   async (config) => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
+    const token = getTokenFromRedux(); // Get token from Redux
     if (config.url.includes("/signin") || config.url.includes("/signup") || config.url.includes("/categories")) {
       return config;
     }
 
     if (token) {
-      //   const verificationResult = await verifyToken(token);
-      //   if (verificationResult.error) {
-      //     alert("Session expired or invalid token. Please log in again.");
-      //     localStorage.removeItem("token");
-      //     return Promise.reject(new Error("Token verification failed."));
-      //   } else {
       config.headers.Authorization = `Bearer ${token}`;
-      //   }
     }
     return config;
   },
@@ -78,7 +68,7 @@ authAxiosInstance.interceptors.response.use(
   async (error) => {
     const { response } = error;
     if (response && response.status === 401) {
-      localStorage.removeItem("token");
+      store.dispatch({ type: 'auth/logout' }); // Dispatch logout action
       alert("Session expired or invalid token. Please log in again.");
       return;
     }

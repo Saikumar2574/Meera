@@ -34,7 +34,7 @@ function Page() {
                     <FaThumbtack className="md:w-5 md:h-5 sm:w-4 sm:h-4 text-gray-600" />
                   </button>
 
-                  <span className="ml-4 font-bold text-[12px] md:text-base">
+                  <span className="ml-4 font-bold text-sm md:text-base">
                     A2B7
                   </span>
 
@@ -71,7 +71,7 @@ function Page() {
                     </div>
                   </div>
                   <h3
-                    className={`text-[12px] md:text-[16px] capitalize font-bold text-gray-900 mt-2 flex-1 transition-all duration-200 overflow-hidden text-ellipsis`}
+                    className={`text-sm md:text-base capitalize font-bold text-gray-900 mt-2 flex-1 transition-all duration-200 overflow-hidden text-ellipsis`}
                     style={{
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
@@ -84,7 +84,7 @@ function Page() {
 
                   <div className="flex items-center  flex-shrink-0 my-1  md:my-2">
                     <p
-                      className={`text-[12px] md:text-lg font-semibold text-gray-500 italic`}
+                      className={`text-sm md:text-lg font-semibold text-gray-500 italic`}
                     >
                       Price : &#8377;5000
                     </p>

@@ -166,7 +166,7 @@ export default function ChatWindow({ products }) {
         <h2 className="mt-30 text-xl font-bold sm:text-5xl dark:text-white text-black">
           Welcome to Gear N Rides
         </h2>
-        <p className="mt-[40px] mb-8 text-left lg:w-[900px] sm:w-full  text-gray-500 text-[20px]">
+        <p className="mt-[40px] mb-8 text-left lg:w-[900px] sm:w-full  text-gray-500 text-xl">
           Hey there, welcome to the interactive store of **GEAR N RIDE**! We
           specialize in offering high-quality motorcycle gear and accessories to
           enhance your riding experience.
