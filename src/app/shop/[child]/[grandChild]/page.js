@@ -5,7 +5,7 @@ import {
   setGrandchildCategories,
 } from "@/lib/redux/reducer/storeReducer";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -44,7 +44,7 @@ function page(props) {
   }, [selectedChild, dispatch]);
 
   const handleCategorySelect = async (grandchild) => {
-    const payload = { id: grandchild.id, name: grandchild.name };
+    const payload = { id: grandchild.productId, name: grandchild.name };
     dispatch(selectGrandChild(payload));
     router.push(
       `/shop/${selectedParent.name}/${selectedChild.name}/${grandchild.name}`
@@ -58,7 +58,7 @@ function page(props) {
       </h2>
       <div className="flex flex-wrap gap-8">
         {grandchildCategories?.map((grandchild) => (
-          <div key={grandchild.id} className="mb-2">
+          <div key={grandchild.productId} className="mb-2">
             <div
               className={`flex flex-col items-center group cursor-pointer text-center `}
               onClick={() => handleCategorySelect(grandchild)}

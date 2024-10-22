@@ -7,7 +7,7 @@ import {
 } from "../service/getData";
 import { Modal, Button, Radio } from "flowbite-react";
 
-function WishlistModal({ showModal, setShowModal, productId, setProductId }) {
+function WishlistModal({ showModal, setShowModal, productId }) {
   const [list, setList] = useState([]);
   const [creatingNew, setCreatingNew] = useState(false);
   const [newWishlistName, setNewWishlistName] = useState("");
@@ -23,7 +23,7 @@ function WishlistModal({ showModal, setShowModal, productId, setProductId }) {
   const addToWishlist = async () => {
     const res = await addWishlistItem(selectedWishlist, productId);
     if (res) {
-      setProductId(null);
+      // setProductId(null);
       setShowModal(false);
     }
   };

@@ -84,9 +84,9 @@ export default function ProductList({
     dispatch(setSelectedIds([]));
   }, []);
 
-  const fetchProductDetails = async (e, id) => {
-    e.stopPropagation();
+  const fetchProductDetails = async (id) => {
     setProduct(null);
+    setProductId(id);
     const res = await getProductDetails(id);
     if (res?.product) {
       console.log(res);
@@ -143,14 +143,14 @@ export default function ProductList({
           </div>
         </div>
       )}
-      {showWishlistModal && (
+      {/* {showWishlistModal && (
         <WishlistModal
           showModal={showWishlistModal}
           setShowModal={setShowWishlistModal}
           productId={productId}
-          setProductId={setProductId}
+          // setProductId={setProductId}
         />
-      )}
+      )} */}
 
       <div className="w-full flex items-center justify-center p-6">
         <div className="w-full h-full flex flex-col relative ml-0">
@@ -186,18 +186,14 @@ export default function ProductList({
                     ) : products?.length > 0 ? (
                       products?.map((card, index) => (
                         <div key={index} className="relative group">
-                          <div
-                            className="flex flex-col w-[280px] cursor-pointer overflow-hidden bg-white rounded-md transition-all duration-700 "
-                            onClick={(e) =>
-                              fetchProductDetails(e, card.productId)
+                          <ProductCard
+                            product={card}
+                            pinnedProducts={pinnedProducts}
+                            togglePin={handleCardClick}
+                            onCardClick={() =>
+                              fetchProductDetails(card.productId)
                             }
-                          >
-                            <ProductCard
-                              product={card}
-                              pinnedProducts={pinnedProducts}
-                              togglePin={handleCardClick}
-                            />
-                          </div>
+                          />
                         </div>
                       ))
                     ) : (
@@ -224,18 +220,14 @@ export default function ProductList({
                     ) : recomendedProducts?.good_match?.length > 0 ? (
                       recomendedProducts?.good_match.map((card, index) => (
                         <div key={index} className="relative group">
-                          <div
-                            className="flex flex-col w-[280px]  cursor-pointer overflow-hidden bg-white rounded-md transition-all duration-700 "
-                            onClick={(e) =>
-                              fetchProductDetails(e, card.productId)
+                          <ProductCard
+                            product={card}
+                            pinnedProducts={pinnedProducts}
+                            togglePin={handleCardClick}
+                            onCardClick={() =>
+                              fetchProductDetails(card.productId)
                             }
-                          >
-                            <ProductCard
-                              product={card}
-                              pinnedProducts={pinnedProducts}
-                              togglePin={handleCardClick}
-                            />
-                          </div>
+                          />
                         </div>
                       ))
                     ) : (
@@ -261,18 +253,14 @@ export default function ProductList({
                     ) : recomendedProducts?.partial_match?.length > 0 ? (
                       recomendedProducts?.partial_match.map((card, index) => (
                         <div key={index} className="relative group">
-                          <div
-                            className="flex flex-col w-[280px]  cursor-pointer overflow-hidden bg-white rounded-md transition-all duration-700 "
-                            onClick={(e) =>
-                              fetchProductDetails(e, card.productId)
+                          <ProductCard
+                            product={card}
+                            pinnedProducts={pinnedProducts}
+                            togglePin={handleCardClick}
+                            onCardClick={() =>
+                              fetchProductDetails(card.productId)
                             }
-                          >
-                            <ProductCard
-                              product={card}
-                              pinnedProducts={pinnedProducts}
-                              togglePin={handleCardClick}
-                            />
-                          </div>
+                          />
                         </div>
                       ))
                     ) : (

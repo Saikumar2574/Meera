@@ -262,7 +262,7 @@ export function PlaceholdersAndVanishTextarea({
                 if (!value) e.target.rows = 1;
               }}
               className={cn(
-                "ml-4 w-full mt-2 py-0  relative text-xl z-10 border-none dark:text-black bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4  pr-20",
+                "ml-4 w-full mt-2 py-0  relative z-10 border-none dark:text-black bg-transparent text-black h-full rounded-lg focus:outline-none focus:ring-0 pl-4  pr-20",
                 "overflow-y-auto",
                 "max-h-40",
                 "transition-all duration-500 ease-in-out",

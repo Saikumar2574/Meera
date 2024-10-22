@@ -1,4 +1,4 @@
-import { store } from "@/lib/redux/store";
+import { store } from "../../lib/redux/store";
 import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -23,7 +23,10 @@ const getTokenFromRedux = () => {
 // Request interceptor for apiAxiosInstance
 apiAxiosInstance.interceptors.request.use(
   async (config) => {
-    const token = getTokenFromRedux(); // Get token from Redux instead of localStorage
+    const token = getTokenFromRedux(); 
+    if (config.url.includes("/signin") || config.url.includes("/signup") || config.url.includes("/categories")) {
+      return config;
+    }
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

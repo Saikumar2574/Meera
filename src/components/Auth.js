@@ -9,6 +9,11 @@ function Auth({ openModal, onCloseModal }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState("");
+  const [dob, setDob] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState(""); // For error messages
   const [loading, setLoading] = useState(false); // For loading state
 
@@ -25,7 +30,16 @@ function Auth({ openModal, onCloseModal }) {
           setLoading(false);
           return;
         }
-        response = await signUp({ email, password });
+        response = await signUp({
+          email,
+          password,
+          confirmPassword,
+          firstName,
+          lastName,
+          gender,
+          dob,
+          phone,
+        });
       } else {
         response = await login({ email, password });
       }
@@ -65,6 +79,111 @@ function Auth({ openModal, onCloseModal }) {
                   className="mt-4 md:mt-8"
                 >
                   <div className="space-y-2 md:space-y-4">
+                    {isSignUp && (
+                      <>
+                        <div>
+                          <label
+                            htmlFor="first-name"
+                            className="text-sm md:text-base font-medium text-gray-900 "
+                          >
+                            First Name
+                          </label>
+                          <div className="mt-2.5">
+                            <input
+                              type="text"
+                              id="first-name"
+                              placeholder="First Name"
+                              value={firstName}
+                              onChange={(e) => setFirstName(e.target.value)}
+                              className="block w-full p-2 md:p-4 text-gray-900 placeholder-gray-600 bg-white border border-gray-400 rounded-xl focus:border-gray-900 focus:ring-gray-900 caret-gray-900"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="last-name"
+                            className="text-sm md:text-base font-medium text-gray-900 "
+                          >
+                            Last Name
+                          </label>
+                          <div className="mt-2.5">
+                            <input
+                              type="text"
+                              id="last-name"
+                              placeholder="Last Name"
+                              value={lastName}
+                              onChange={(e) => setLastName(e.target.value)}
+                              className="block w-full p-2 md:p-4 text-gray-900 placeholder-gray-600 bg-white border border-gray-400 rounded-xl focus:border-gray-900 focus:ring-gray-900 caret-gray-900"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="gender"
+                            className="text-sm md:text-base font-medium text-gray-900 "
+                          >
+                            Gender
+                          </label>
+                          <div className="mt-2.5">
+                            <select
+                              id="gender"
+                              value={gender}
+                              onChange={(e) => setGender(e.target.value)}
+                              className="block w-full p-2 md:p-4 text-gray-900 bg-white border border-gray-400 rounded-xl focus:border-gray-900 focus:ring-gray-900"
+                              required
+                            >
+                              <option value="">Select Gender</option>
+                              <option value="male">Male</option>
+                              <option value="female">Female</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="dob"
+                            className="text-sm md:text-base font-medium text-gray-900 "
+                          >
+                            Date of Birth
+                          </label>
+                          <div className="mt-2.5">
+                            <input
+                              type="date"
+                              id="dob"
+                              value={dob}
+                              onChange={(e) => setDob(e.target.value)}
+                              className="block w-full p-2 md:p-4 text-gray-900 placeholder-gray-600 bg-white border border-gray-400 rounded-xl focus:border-gray-900 focus:ring-gray-900 caret-gray-900"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="phone"
+                            className="text-sm md:text-base font-medium text-gray-900 "
+                          >
+                            Phone Number
+                          </label>
+                          <div className="mt-2.5">
+                            <input
+                              type="tel"
+                              id="phone"
+                              placeholder="Phone Number"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              className="block w-full p-2 md:p-4 text-gray-900 placeholder-gray-600 bg-white border border-gray-400 rounded-xl focus:border-gray-900 focus:ring-gray-900 caret-gray-900"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+
                     <div>
                       <label
                         htmlFor="email"
@@ -97,7 +216,7 @@ function Auth({ openModal, onCloseModal }) {
                           <a
                             href="#"
                             title=""
-                            className="text-sm md:text-base font-medium text-gray-500 rounded  hover:text-gray-900 hover:underline focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2"
+                            className="text-sm md:text-base font-medium text-gray-500 rounded hover:text-gray-900 hover:underline focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2"
                           >
                             Forgot Password?
                           </a>
@@ -140,53 +259,50 @@ function Auth({ openModal, onCloseModal }) {
                       </div>
                     )}
 
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {error && (
+                      <div className="text-red-500 text-sm mt-4">{error}</div>
+                    )}
 
-                    <button
-                      type="submit"
-                      className={`flex items-center justify-center w-full px-8 py-4 text-sm md:text-base font-bold text-white transition-all duration-200 bg-gray-900 border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900  hover:bg-gray-600 ${
-                        loading ? "cursor-not-allowed opacity-50" : ""
-                      }`}
-                      disabled={loading}
-                    >
-                      {loading
-                        ? "Processing..."
-                        : isSignUp
-                        ? "Sign Up"
-                        : "Sign In"}
-                    </button>
+                    <div className="mt-5 md:mt-8">
+                      <button
+                        type="submit"
+                        className="inline-flex w-full items-center justify-center px-4 py-2 md:px-6 md:py-4 text-base md:text-lg font-bold text-white bg-gray-900 border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                      >
+                        {loading
+                          ? "Processing..."
+                          : isSignUp
+                          ? "Sign Up"
+                          : "Log In"}
+                      </button>
+                    </div>
                   </div>
                 </form>
-                <a
-                  href="#"
-                  title=""
-                  className="flex items-center justify-center w-full px-8 py-4 mt-4 text-sm md:text-base font-bold text-gray-900 transition-all duration-200 bg-gray-100 border border-transparent rounded-xl hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 "
-                  role="button"
-                >
-                  <svg
-                    className="w-5 h-5 mr-4"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    {/* SVG paths */}
-                  </svg>
-                  Sign in with Google
-                </a>
 
-                <p className="mt-4 text-sm md:text-base font-normal text-center text-gray-900 ">
-                  {isSignUp
-                    ? "Already have an account?"
-                    : "Don’t have an account?"}
-                  <a
-                    onClick={() => setIsSignUp((prev) => !prev)}
-                    href="#"
-                    title=""
-                    className="font-bold rounded hover:underline focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2"
-                  >
-                    {isSignUp ? "Log In" : "Create Free Account"}
-                  </a>
-                </p>
+                <div className="mt-4 md:mt-8">
+                  <p className="text-center text-sm md:text-base font-medium text-gray-500">
+                    {isSignUp ? (
+                      <>
+                        Already have an account?{" "}
+                        <button
+                          onClick={() => setIsSignUp(false)}
+                          className="text-gray-900 hover:underline"
+                        >
+                          Log In
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        Don't have an account?{" "}
+                        <button
+                          onClick={() => setIsSignUp(true)}
+                          className="text-gray-900 hover:underline"
+                        >
+                          Sign Up
+                        </button>
+                      </>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

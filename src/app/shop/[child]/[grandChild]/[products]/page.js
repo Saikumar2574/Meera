@@ -8,6 +8,7 @@ import {
 } from "@/lib/redux/reducer/storeReducer";
 import ExploreStore from "@/components/ExploreStore";
 import { Pagination } from "flowbite-react";
+import { fetchShortlistItems } from "@/lib/redux/reducer/productReducer";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
@@ -45,8 +46,14 @@ const ProductsPage = () => {
     dispatch(setProducts([])); // Reset products on page change
     loadMoreProducts(page);
   };
+  // const fetchShorlistItems = async () => {
+  //   await getShortListedItems().then((res) => {
+  //     dispatch(setShortListItems(res.shortlists?.[0] || null));
+  //   });
+  // };
 
   useEffect(() => {
+    dispatch(fetchShortlistItems());
     dispatch(setHasMore(true));
     dispatch(setProducts([]));
   }, []);
@@ -69,9 +76,8 @@ const ProductsPage = () => {
 
           {/* Add Pagination Component */}
           <div className="flex overflow-x-auto sm:justify-center mt-4">
-            
             <Pagination
-            //   layout="table"
+              //   layout="table"
               currentPage={currentPage}
               totalPages={totalPages} // Use totalPages from API
               onPageChange={onPageChange}

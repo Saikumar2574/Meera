@@ -2,7 +2,7 @@
 import { ThemeProvider } from "next-themes";
 import React, { Suspense } from "react";
 import { Provider } from "react-redux";
-import { store } from "@/lib/redux/store";
+import { store } from "../lib/redux/store";
 
 function MainComponent({ children }) {
   return (

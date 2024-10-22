@@ -1,3 +1,4 @@
+import axios from "axios";
 import { apiAxiosInstance, authAxiosInstance } from "./axiosIntenses";
 
 const getToken = () => {
@@ -22,7 +23,10 @@ export const getData = async (msg) => {
 export const recommendedProducts = async (data) => {
   // const token = getToken();
   try {
-    const response = await apiAxiosInstance.post(`/products/recommendations`, data);
+    const response = await apiAxiosInstance.post(
+      `/products/recommendations`,
+      data
+    );
     return response.data;
   } catch (err) {
     console.error("Request failed:", err.response?.data || err.message);
@@ -157,6 +161,28 @@ export const getHistory = async () => {
   }
 };
 
+export const getConversations = async () => {
+  try {
+    const response =
+      await authAxiosInstance.get(`/history/conversations?page=1&page_size=100
+`);
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
+export const getConversationsById = async (id) => {
+  try {
+    const response =
+      await authAxiosInstance.get(`/history/conversations?session_id=${id}
+`);
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
 export const getAudioText = async (audio) => {
   const token = getToken();
   try {
@@ -191,6 +217,35 @@ export const getChildCategories = async (id) => {
     const response = await authAxiosInstance.get(
       `/categories?category_id=${id}&category_type=child&page=1&per_page=2`
     );
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
+export const addToShortList = async (obj) => {
+  try {
+    const response = await authAxiosInstance.post(`/shortlist`, obj);
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
+export const getShortListedItems = async (obj) => {
+  try {
+    const response = await authAxiosInstance.get(`/shortlist`);
+    return response.data;
+  } catch (err) {
+    return { error: err.response?.data || err.message };
+  }
+};
+
+export const deleteShortListedItem = async (obj) => {
+  try {
+    const response = await authAxiosInstance.delete(`/shortlist`, {
+      data: obj,
+    });
     return response.data;
   } catch (err) {
     return { error: err.response?.data || err.message };

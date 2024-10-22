@@ -101,10 +101,10 @@ function HomePage(props) {
                   : "bg-white text-black"
               } p-6 md:p-8 rounded-lg flex flex-col justify-between cursor-pointer  h-60 md:h-80 transition-transform transform border hover:scale-105`}
               style={{ boxShadow: "10px 5px 20px rgba(131, 131, 131, 0.21)" }}
-              // onClick={() => {
-              //   dispatch(resetState())
-              //   router.push("/shop");
-              // }}
+              onClick={() => {
+                dispatch(resetState())
+                router.push("/shop");
+              }}
             >
               <IoStorefrontOutline size={30} />
               <p className="text-lg md:text-xl font-bold italic overflow-hidden">

@@ -413,6 +413,8 @@ body {
 .markdown p {
   font-weight: 500;
   font-size: 1rem;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 /* Ordered Lists */
@@ -423,6 +425,8 @@ body {
 
 .markdown ol li {
   margin-top: 10px;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 /* Unordered Lists */
@@ -433,6 +437,8 @@ body {
 
 .markdown ul li {
   margin-top: 5px;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 /* Ensure the table is scrollable horizontally on mobile devices */
@@ -518,5 +524,12 @@ body {
 .markdown p strong {
   font-size: 1.2rem;
   color: #333;
+  margin-top: 20px;
 }
 
+
+.markdown ul {
+  list-style-type: none;
+
+
+}

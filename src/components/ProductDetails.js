@@ -14,8 +14,6 @@ import { addCart } from "./service/getData";
 import Image from "next/image";
 
 function ProductDetails({ open, close, data }) {
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
   const [currentPrice, setCurrentPrice] = useState(data?.price);
   const [quantity, setQuantity] = useState(1);
   // Attributes and variations from props (assuming you pass these)
@@ -129,7 +127,7 @@ function ProductDetails({ open, close, data }) {
         content: {
           base: "relative flex md:max-h-[90%] ",
           inner:
-            "relative flex flex-col bg-[#edf1f8] shadow dark:bg-gray-700  rounded-none md:rounded-lg",
+            "relative flex flex-col bg-white shadow dark:bg-gray-700  rounded-none md:rounded-lg",
         },
       }}
       onClose={close}

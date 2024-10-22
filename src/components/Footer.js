@@ -11,7 +11,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { ImMic } from "react-icons/im";
 import { FaStopCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getData } from "./service/getData";
 import { useSelector } from "react-redux";
 
@@ -19,6 +19,8 @@ function Footer() {
   const router = useRouter();
   const token = useSelector((state) => state.auth?.token || null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const prompt = searchParams.get("prompt")
   const [searchText, setSearchText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState(null);
@@ -26,7 +28,6 @@ function Footer() {
   const [action, setAction] = useState(null);
   const scale = useMotionValue(1);
   const transformScale = useTransform(scale, [0, 1], [0.8, 1.2]);
-
 
   const placeholders1 = [
     "Show me riding jackets, pants and gloves",
@@ -176,6 +177,13 @@ function Footer() {
     }
   };
 
+
+  useEffect(()=>{
+    if(pathname === "/search/" && prompt){
+        setSearchText(prompt)
+    }
+  },[pathname,prompt])
+
   const onSubmit = (value) => {
     setSearchText("");
     if (!token) {
@@ -183,6 +191,11 @@ function Footer() {
       return;
     }
     if (pathname == "/" || pathname == "/search/") {
+      // const prompt = searchParams.get("prompt");
+      // if (prompt) {
+      //   let text = prompt + ". " + value;
+      //   router.push(`/search?prompt=${text}`);
+      // } else 
       router.push(`/search?prompt=${value}`);
     } else if (pathname.startsWith("/search/products")) {
       router.push(`/search/products/query?msg=${value}`);

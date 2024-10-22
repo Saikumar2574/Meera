@@ -12,7 +12,7 @@ function InfoLevel({ content, onClick }) {
         <div className="p-4 bg-gray-100 rounded-md">
             <ul className="space-y-2">
                 <AnimatePresence>
-                    {content.map((item, index) => (
+                    {content?.map((item, index) => (
                         <motion.li
                             key={index}
                             variants={itemVariants}

@@ -21,7 +21,7 @@ function Page() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const itemIds = selectedItems.map((item) => item.id).join(",");
+      const itemIds = selectedItems.map((item) => item.productId).join(",");
       const res = await getQueryData(itemIds, msg); // Fetch data using 'msg' from the URL
       if (res?.error) {
         console.error("Error fetching data:", res?.error);

@@ -20,14 +20,13 @@ function Understanding({
 
   return (
     <div className="flex flex-col relative mt-8">
-      <h2 className="mt-30 ml-0 md:ml-6 text-xl font-bold sm:text-4xl italic dark:text-white text-black leading-6  md:leading-[55px]">
+      <h2 className="mt-30 ml-0  text-xl font-bold sm:text-4xl italic dark:text-white text-black leading-6  md:leading-[55px]">
         Hey there,
         <br />
         this is what i could process ...
       </h2>
 
-      <div className="grid grid-cols-12 gap-0 md:gap-8 mt-6 w-full">
-        {/* 8-column layout */}
+      {/* <div className="grid grid-cols-12 gap-0 md:gap-8 mt-6 w-full">
         <div
           className="col-span-12 md:col-span-8 p-5 md:p-10 rounded-2xl border"
           style={{ boxShadow: "10px 5px 20px  #83838336" }}
@@ -78,14 +77,14 @@ function Understanding({
           )}
           <p className="text-lg">Relevance Score</p>
         </div>
-      </div>
+      </div> */}
 
       <div
         ref={phrasesRef}
-        className="p-5 md:p-10 rounded-2xl mt-6 border"
-        style={{ boxShadow: "10px 5px 20px  #83838336" }}
+        className="mt-6"
+        // style={{ boxShadow: "10px 5px 20px  #83838336" }}
       >
-        <h4 className="text-xl italic font-bold">Shopping List</h4>
+        {/* <h4 className="text-xl italic font-bold">Shopping List</h4> */}
         {isLoading ? (
           <>
             <Skeleton count={2} />
@@ -93,7 +92,7 @@ function Understanding({
           </>
         ) : (
           <>
-            <p className="text-lg italic mb-4 mt-6">{data?.first_engagement}</p>
+            <p className="text-lg italic mb-4 mt-6 text-black">{data?.first_engagement}</p>
             <p className="text-lg italic font-semibold">
               Select And Get Started
             </p>

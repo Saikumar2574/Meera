@@ -33,7 +33,8 @@ const ChildCategoriesPage = () => {
 
 
   const handleChildClick = (child) => {
-    const payload = { id: child.id, name: child.name };
+    debugger
+    const payload = { id: child.productId, name: child.name };
     dispatch(selectChild(payload));
     router.push(`/shop/${selectedParent.name}/${child.name}`);
   };
@@ -45,7 +46,7 @@ const ChildCategoriesPage = () => {
       </h2>
       <div className="flex flex-wrap gap-8">
         {childCategories.map((child) => (
-          <div key={child.id} className="mb-2">
+          <div key={child.productId} className="mb-2">
             <div
               className="flex flex-col items-center group cursor-pointer text-center"
               onClick={() => handleChildClick(child)}

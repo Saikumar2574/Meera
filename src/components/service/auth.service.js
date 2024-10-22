@@ -1,6 +1,4 @@
-
 import { authAxiosInstance } from "./axiosIntenses";
-
 
 export const login = async (credentials) => {
   try {
@@ -18,10 +16,16 @@ export const login = async (credentials) => {
 export const signUp = async (credentials) => {
   try {
     const response = await authAxiosInstance.post("/signup", {
-      username: credentials.email,
+      // username:credentials.email,
       email: credentials.email,
       password: credentials.password,
-      meta: {},
+      confirmPassword: credentials.confirmPassword,
+      firstName: credentials.firstName,
+      lastName: credentials.lastName,
+      gender: credentials.gender,
+      dateOfBirth: credentials.dob,
+      phoneNumber: credentials.phone,
+      meta:{}
     });
     return response.data;
   } catch (err) {

@@ -65,7 +65,7 @@ export default function Cart({
         open={isOpen}
         onClose={onClose}
         position={position}
-        className="w-full md:w-[30vw] flex flex-col p-2 mt-0 pb-20 md:pb-2"
+        className="w-full md:w-[40%] xl:w-[30%] flex flex-col p-2 mt-0 pb-20 md:pb-2"
       >
         {/* <Drawer.Header titleIcon={() => <></>} title="" closeIcon={() => <></>} /> */}
         <div className="flex-grow overflow-hidden h-full">

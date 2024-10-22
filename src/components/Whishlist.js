@@ -66,7 +66,7 @@ function Whishlist({ isOpen, onClose, data, position = "right", getWishList }) {
       open={isOpen}
       onClose={colse}
       position={position}
-      className="w-full md:w-[30vw] p-2 pb-20 md:pb-2"
+      className="w-full md:w-[40%] xl:w-[30%] p-2 pb-20 md:pb-2"
     >
       <Drawer.Items>
         <div class="h-full overflow-hidden flex flex-col  justify-between  bg-white">

@@ -1,24 +1,28 @@
 "use client";
 import { Spinner, Tooltip } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { getProductDetails } from "./service/getData";
+import { addToShortList, getProductDetails } from "./service/getData";
 import ProductDetails from "./ProductDetails";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ProductCard from "./ui/productCard";
 import { useDispatch } from "react-redux";
-import { setSelectedIds } from "@/lib/redux/reducer/productReducer";
+import { fetchShortlistItems, setSelectedIds } from "@/lib/redux/reducer/productReducer";
 import { useSelector } from "react-redux";
+import { usePathname, useRouter } from "next/navigation";
 
 function ExploreStore({ data }) {
+  const pathname = usePathname();
+  const router = useRouter();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState(null);
 
-  const pinnedProducts = useSelector((state) => state.products.selectedIds);
+  const pinnedProducts =
+    useSelector((state) => state.products.selectedIds) || [];
 
   const togglePin = (product) => {
     let updatedPinnedProducts;
-    if (pinnedProducts.some((prevCard) => prevCard.id === product.id)) {
+    if (pinnedProducts?.some((prevCard) => prevCard.id === product.id)) {
       updatedPinnedProducts = pinnedProducts.filter(
         (prevCard) => prevCard.id !== product.id
       );
@@ -29,17 +33,7 @@ function ExploreStore({ data }) {
     dispatch(setSelectedIds(updatedPinnedProducts));
   };
 
-  const fetchProductDetails = async (e, id) => {
-    e.stopPropagation();
-    setProduct(null);
-    const res = await getProductDetails(id);
-    if (res?.product) {
-      setProduct(res?.product);
-    }
-  };
-  useEffect(() => {
-    dispatch(setSelectedIds([]));
-  }, []);
+  
 
   return (
     <section className="py-4">
@@ -63,19 +57,16 @@ function ExploreStore({ data }) {
                   index={product}
                 >
                   {(provided) => (
-                    <div
-                      className="flex flex-col w-[280px] overflow-hidden bg-white cursor-pointer rounded-md transition-all duration-700 "
-                      // ref={provided.innerRef}
-                      onClick={(e) => fetchProductDetails(e, product.id)}
-                      // {...provided.draggableProps}
-                      // {...provided.dragHandleProps}
-                    >
+                    <>
                       <ProductCard
                         product={product || {}}
                         pinnedProducts={pinnedProducts || []}
                         togglePin={togglePin}
+                        onCardClick={() =>
+                          router.push(`${pathname + "/" + product.productId}`)
+                        }
                       />
-                    </div>
+                    </>
                   )}
                 </Draggable>
               ))}

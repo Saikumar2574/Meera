@@ -161,8 +161,12 @@ const Sidebar = ({ component, setComponent, setIsSearch, setModel }) => {
       <div>
         <Tooltip content={<>All&nbsp;Conversations</>} placement="right" className="absolute z-10 inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm ml-4">
           <button
-            className="p-2 rounded-full hover:bg-gray-200 hover:rounded-md  transition-colors group"
-            onClick={fetchHistory}
+             className={`p-2  hover:bg-gray-200 rounded-md transition-colors group ${
+              pathname.startsWith("/conversations") && "bg-gray-200"
+            }`}
+            onClick={() => {
+              route.push("/conversations");
+            }}
           >
             <BsChatSquareText
               size={22}
